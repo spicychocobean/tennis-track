@@ -141,8 +141,8 @@
   function uid() { return 't' + Date.now() + Math.random().toString(36).slice(2,7); }
   const RATES = { off: 425, peak: 467.5 };
   const RATE_LABELS = { off: '闲时', peak: '忙时' };
-  const AVATAR_TANG = '';
-  const AVATAR_KE = '';
+  const AVATAR_TANG = './tang.png';
+  const AVATAR_KE = './ke.png';
 
   // ===== 数据库读写（Supabase）=====
   // 数据库字段是下划线命名(play_type)，前端用驼峰(playType)，下面两个函数负责互转
