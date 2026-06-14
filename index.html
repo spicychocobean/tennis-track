@@ -1,0 +1,1143 @@
+<div id="tennis-app"></div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  #tennis-app {
+    --clay: #BD5D31;
+    --clay-deep: #A14E27;
+    --court: #1F4035;
+    --court-light: #2E5949;
+    --chalk: #F7F3E8;
+    --chalk-dim: #EDE7D8;
+    --ball: #CFE05B;
+    --ink: #211D1A;
+    --ink-soft: #6B6258;
+    --line: rgba(33,29,26,0.10);
+
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--chalk);
+    border-radius: 18px;
+    padding: 22px;
+    max-width: 720px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  #tennis-app * { box-sizing: border-box; }
+
+  /* ---------- Header ---------- */
+  .tn-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .tn-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--court);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tn-title-ball {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+  .tn-title span { color: var(--clay); }
+  .tn-settings-btn {
+    background: none;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: all 0.15s ease;
+  }
+  .tn-settings-btn:hover { border-color: var(--clay); color: var(--clay); }
+
+  /* ---------- Scoreboard ---------- */
+  .tn-scoreboard {
+    background: var(--court);
+    border-radius: 14px;
+    padding: 22px 24px;
+    color: var(--chalk);
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tn-scoreboard::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 6px;
+    background: repeating-linear-gradient(
+      to bottom, var(--ball) 0 10px, transparent 10px 20px
+    );
+    opacity: 0.6;
+  }
+  .tn-score-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ball);
+    font-weight: 600;
+    margin: 0 0 6px 0;
+  }
+  .tn-score-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .tn-score-main {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .tn-score-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: rgba(247,243,232,0.55);
+    padding-bottom: 6px;
+  }
+  .tn-court-line {
+    margin-top: 16px;
+    height: 6px;
+    border-radius: 4px;
+    background: rgba(247,243,232,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .tn-court-line-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: var(--clay);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .tn-court-line-ball {
+    position: absolute;
+    top: 50%;
+    width: 14px; height: 14px;
+    background: var(--ball);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 3px var(--court);
+    transition: left 0.4s ease;
+  }
+  .tn-score-foot {
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(247,243,232,0.6);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ---------- Stats grid ---------- */
+  .tn-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 520px) {
+    .tn-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  .tn-stat-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .tn-stat-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .tn-stat-num .unit { font-size: 13px; color: var(--ink-soft); font-family: 'Inter', sans-serif; font-weight: 500; margin-left: 2px;}
+  .tn-stat-label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+  .tn-stat-card.tn-me .tn-stat-num { color: var(--court); }
+  .tn-stat-card.tn-friend .tn-stat-num { color: var(--clay); }
+
+  /* ---------- Section titles ---------- */
+  .tn-section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--ink-soft);
+    margin: 22px 0 10px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--line);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tn-section-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tn-year-select {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--ink);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    padding: 5px 8px;
+    cursor: pointer;
+  }
+  .tn-chart-title {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+  }
+  .tn-chart-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .tn-chart-title-row .tn-chart-title { margin-bottom: 0; }
+
+  /* ---------- Avatars ---------- */
+  .tn-stat-card { position: relative; }
+  .tn-stat-avatar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #fff;
+    box-shadow: 0 1px 3px rgba(33,29,26,0.18);
+  }
+  .tn-history-icon img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+  }
+  .tn-history-icon.together {
+    position: relative;
+    background: var(--court);
+  }
+  .tn-history-icon.together .tn-pair-avatar {
+    position: absolute;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--court);
+  }
+  .tn-history-icon.together .tn-pair-avatar.a { top: -2px; left: -2px; z-index: 2; }
+  .tn-history-icon.together .tn-pair-avatar.b { bottom: -2px; right: -2px; }
+
+  /* ---------- Quick add (记一笔) ---------- */
+  .tn-quickadd {
+    background: linear-gradient(135deg, rgba(207,224,91,0.20), rgba(189,93,49,0.06));
+    border: 1.5px solid rgba(189,93,49,0.22);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .tn-quickadd .tn-section-title {
+    margin-top: 0;
+    border-bottom: 1px dashed rgba(189,93,49,0.25);
+  }
+
+  /* ---------- Form card ---------- */
+  .tn-form-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .tn-toggle-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    background: var(--chalk-dim);
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .tn-toggle-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 9px 4px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .tn-toggle-btn.active {
+    background: var(--court);
+    color: var(--chalk);
+  }
+  .tn-toggle-btn.recharge-active {
+    background: var(--clay);
+    color: var(--chalk);
+  }
+
+  .tn-field-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .tn-field {
+    flex: 1;
+    min-width: 130px;
+  }
+  .tn-field label {
+    display: block;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+  }
+  .tn-field input, .tn-field select {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--chalk);
+  }
+  .tn-field input:focus, .tn-field select:focus {
+    outline: none;
+    border-color: var(--court);
+  }
+
+  .tn-amount-preview {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .tn-amount-preview strong {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--court);
+    font-size: 15px;
+  }
+
+  .tn-play-type-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .tn-play-type-btn {
+    flex: 1;
+    border: 1.5px solid var(--line);
+    background: var(--chalk);
+    padding: 10px 6px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+  }
+  .tn-play-type-btn.selected {
+    border-color: var(--court);
+    background: var(--court);
+    color: var(--chalk);
+  }
+
+  .tn-submit-btn {
+    width: 100%;
+    border: none;
+    background: var(--court);
+    color: var(--chalk);
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .tn-submit-btn:hover { background: var(--court-light); }
+  .tn-submit-btn.recharge { background: var(--clay); }
+  .tn-submit-btn.recharge:hover { background: var(--clay-deep); }
+
+  /* ---------- Chart ---------- */
+  .tn-chart-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .tn-chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 90px;
+  }
+  .tn-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+  }
+  .tn-bar {
+    width: 100%;
+    border-radius: 4px 4px 2px 2px;
+    background: var(--chalk-dim);
+    min-height: 4px;
+    transition: height 0.3s ease;
+  }
+  .tn-bar.has-games { background: var(--court); }
+  .tn-bar.this-week { background: var(--clay); }
+  .tn-bar-label {
+    font-size: 10px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tn-bar-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ---------- History list ---------- */
+  .tn-history {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tn-history-item {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .tn-history-icon {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    color: var(--chalk);
+  }
+  .tn-history-icon.together { background: var(--court); }
+  .tn-history-icon.me { background: var(--court-light); }
+  .tn-history-icon.friend { background: var(--clay); }
+  .tn-history-icon.recharge { background: var(--ball); color: var(--ink); }
+
+  .tn-history-body { flex: 1; min-width: 0; }
+  .tn-history-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .tn-history-sub {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tn-history-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .tn-history-amount.recharge { color: #5C8A2E; }
+  .tn-history-del {
+    border: none;
+    background: none;
+    color: var(--ink-soft);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 6px;
+    line-height: 1;
+  }
+  .tn-history-del:hover { color: var(--clay); background: var(--chalk-dim); }
+
+  .tn-empty {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+    padding: 24px 0;
+  }
+
+  /* ---------- Settings panel ---------- */
+  .tn-settings-panel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .tn-settings-panel .tn-field-row:last-child { margin-bottom: 0; }
+  .tn-settings-close {
+    width: 100%;
+    border: 1.5px solid var(--line);
+    background: var(--chalk);
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  .tn-loading {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+</style>
+
+<script>
+(function() {
+  const root = document.getElementById('tennis-app');
+
+  let state = {
+    loaded: false,
+    settings: { myName: '小唐', friendName: '小柯', initialBalance: 20000 },
+    transactions: [], // {id, kind:'play'|'recharge', date, playType?:'me'|'friend'|'together', amount, note}
+    formMode: 'play', // 'play' | 'recharge'
+    playType: 'together',
+    rateType: 'off', // 'off' (闲时) | 'peak' (忙时)
+    hours: 1,
+    formDate: new Date().toISOString().slice(0,10),
+    formAmount: '',
+    formNote: '',
+    showSettings: false,
+    settingsDraft: null,
+    playFilter: 'month', // 'month' | 'year' | 'all'
+    summaryYear: new Date().getFullYear(),
+    chartDimension: 'me' // 'me' | 'friend' | 'together'
+  };
+
+  function uid() { return 't' + Date.now() + Math.random().toString(36).slice(2,7); }
+
+  const RATES = { off: 425, peak: 467.5 };
+  const RATE_LABELS = { off: '闲时', peak: '忙时' };
+
+  const AVATAR_TANG = 'data:image/jpeg;base64,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';
+  const AVATAR_KE = 'data:image/jpeg;base64,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';
+
+  async function load() {
+    try {
+      const tx = await window.storage.get('tn_transactions', false);
+      if (tx) state.transactions = JSON.parse(tx.value);
+    } catch (e) { /* no data yet */ }
+    try {
+      const s = await window.storage.get('tn_settings', false);
+      if (s) state.settings = JSON.parse(s.value);
+    } catch (e) { /* no data yet */ }
+    state.loaded = true;
+    render();
+  }
+
+  async function saveTransactions() {
+    try { await window.storage.set('tn_transactions', JSON.stringify(state.transactions), false); }
+    catch (e) { console.error('save tx failed', e); }
+  }
+  async function saveSettings() {
+    try { await window.storage.set('tn_settings', JSON.stringify(state.settings), false); }
+    catch (e) { console.error('save settings failed', e); }
+  }
+
+  function fmtMoney(n) {
+    return '¥' + Number(n).toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+  }
+  function fmtDate(d) {
+    const dt = new Date(d + 'T00:00:00');
+    return `${dt.getMonth()+1}/${dt.getDate()}`;
+  }
+  function fmtFullDate(d) {
+    const dt = new Date(d + 'T00:00:00');
+    return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+  }
+
+  function computeSpendingStats() {
+    const s = state.settings;
+    let totalRecharge = s.initialBalance;
+    let totalSpent = 0;
+    let myShare = 0;
+    let friendShare = 0;
+    let playCount = 0;
+    let lastPlayDate = null;
+
+    for (const t of state.transactions) {
+      if (t.kind === 'recharge') {
+        totalRecharge += Number(t.amount);
+      } else {
+        totalSpent += Number(t.amount);
+        playCount++;
+        if (t.playType === 'together') {
+          myShare += Number(t.amount) / 2;
+          friendShare += Number(t.amount) / 2;
+        } else if (t.playType === 'me') {
+          myShare += Number(t.amount);
+        } else if (t.playType === 'friend') {
+          friendShare += Number(t.amount);
+        }
+        if (!lastPlayDate || t.date > lastPlayDate) lastPlayDate = t.date;
+      }
+    }
+
+    const remaining = totalRecharge - totalSpent;
+    const pct = totalRecharge > 0 ? Math.max(0, Math.min(100, (remaining / totalRecharge) * 100)) : 0;
+
+    let daysSinceLast = null;
+    if (lastPlayDate) {
+      const d1 = new Date(lastPlayDate + 'T00:00:00');
+      const d2 = new Date(); d2.setHours(0,0,0,0);
+      daysSinceLast = Math.round((d2 - d1) / 86400000);
+    }
+
+    return { totalRecharge, totalSpent, remaining, pct, myShare, friendShare, playCount, daysSinceLast };
+  }
+
+  // filter: 'month' (this calendar month), 'year' (calendar year given by `year`), 'all'
+  function computePlayStats(filter, year) {
+    const now = new Date();
+    let startDate = null, endDate = null;
+    if (filter === 'month') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else if (filter === 'year') {
+      const y = year || now.getFullYear();
+      startDate = new Date(y, 0, 1);
+      endDate = new Date(y + 1, 0, 1);
+    }
+
+    let sessionCount = 0, totalHours = 0, totalCost = 0, myHours = 0, friendHours = 0, togetherHours = 0, myCost = 0, friendCost = 0;
+    for (const t of state.transactions) {
+      if (t.kind !== 'play') continue;
+      const d = new Date(t.date + 'T00:00:00');
+      if (startDate && d < startDate) continue;
+      if (endDate && d >= endDate) continue;
+      const hours = Number(t.hours) || 0;
+      const amount = Number(t.amount) || 0;
+      sessionCount++;
+      totalHours += hours;
+      totalCost += amount;
+      if (t.playType === 'together') {
+        togetherHours += hours;
+        myHours += hours; friendHours += hours;
+        myCost += amount / 2; friendCost += amount / 2;
+      } else if (t.playType === 'me') {
+        myHours += hours; myCost += amount;
+      } else if (t.playType === 'friend') {
+        friendHours += hours; friendCost += amount;
+      }
+    }
+    return { sessionCount, totalHours, totalCost, myHours, friendHours, togetherHours, myCost, friendCost };
+  }
+
+  function getAvailableYears() {
+    const years = new Set();
+    years.add(new Date().getFullYear());
+    for (const t of state.transactions) {
+      if (t.kind === 'play') years.add(new Date(t.date + 'T00:00:00').getFullYear());
+    }
+    return Array.from(years).sort((a, b) => b - a);
+  }
+
+  function fmtHours(n) {
+    return Number(n.toFixed(1)).toString();
+  }
+
+  function computeMonthlyChart(dimension) {
+    // last 6 months, total hours per month for the selected dimension
+    const months = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push({ year: d.getFullYear(), month: d.getMonth(), hours: 0 });
+    }
+    for (const t of state.transactions) {
+      if (t.kind !== 'play') continue;
+      const hours = Number(t.hours) || 0;
+      let include = false;
+      if (dimension === 'together') include = t.playType === 'together';
+      else if (dimension === 'friend') include = t.playType === 'friend' || t.playType === 'together';
+      else include = t.playType === 'me' || t.playType === 'together'; // default 'me'
+      if (!include) continue;
+      const d = new Date(t.date + 'T00:00:00');
+      for (const m of months) {
+        if (d.getFullYear() === m.year && d.getMonth() === m.month) { m.hours += hours; break; }
+      }
+    }
+    return months;
+  }
+
+  async function addTransaction() {
+    let amount;
+    if (state.formMode === 'play') {
+      const hours = parseFloat(state.hours);
+      if (!hours || hours <= 0) return;
+      amount = Math.round(RATES[state.rateType] * hours * 100) / 100;
+    } else {
+      amount = parseFloat(state.formAmount);
+      if (!amount || amount <= 0) return;
+    }
+    const tx = {
+      id: uid(),
+      kind: state.formMode,
+      date: state.formDate,
+      amount: amount,
+      note: state.formNote.trim()
+    };
+    if (state.formMode === 'play') {
+      tx.playType = state.playType;
+      tx.rateType = state.rateType;
+      tx.hours = parseFloat(state.hours);
+    }
+    state.transactions.push(tx);
+    state.formAmount = '';
+    state.formNote = '';
+    await saveTransactions();
+    render();
+  }
+
+  async function deleteTransaction(id) {
+    state.transactions = state.transactions.filter(t => t.id !== id);
+    await saveTransactions();
+    render();
+  }
+
+  function openSettings() {
+    state.settingsDraft = {
+      myName: state.settings.myName,
+      friendName: state.settings.friendName,
+      initialBalance: state.settings.initialBalance
+    };
+    state.showSettings = true;
+    render();
+  }
+
+  async function saveSettingsDraft() {
+    state.settings.myName = state.settingsDraft.myName.trim() || '我';
+    state.settings.friendName = state.settingsDraft.friendName.trim() || '朋友';
+    const ib = parseFloat(state.settingsDraft.initialBalance);
+    state.settings.initialBalance = isNaN(ib) ? 20000 : ib;
+    state.showSettings = false;
+    await saveSettings();
+    render();
+  }
+
+  function render() {
+    if (!state.loaded) {
+      root.innerHTML = `<div class="tn-loading">加载中...</div>`;
+      return;
+    }
+
+    const spending = computeSpendingStats();
+    const playStats = computePlayStats(state.playFilter, state.summaryYear);
+    const years = getAvailableYears();
+    const months = computeMonthlyChart(state.chartDimension);
+    const maxHours = Math.max(1, ...months.map(m => m.hours));
+    const s = state.settings;
+
+    const monthLabel = (m) => `${m.month + 1}月`;
+    const filterLabels = { month: '本月', year: `${state.summaryYear}年`, all: '全部' };
+
+    let html = '';
+
+    // Header
+    html += `
+      <div class="tn-header">
+        <h1 class="tn-title">
+          <svg class="tn-title-ball" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="15" fill="var(--ball)" stroke="var(--ink)" stroke-width="1"/>
+            <path d="M16 1 C 8 7, 8 25, 16 31" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+            <path d="M16 1 C 24 7, 24 25, 16 31" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+          </svg>
+          网球<span>记录</span>本
+        </h1>
+        <button class="tn-settings-btn" id="tn-settings-btn">⚙</button>
+      </div>
+    `;
+
+    // Settings panel
+    if (state.showSettings) {
+      html += `
+        <div class="tn-settings-panel">
+          <div class="tn-field-row">
+            <div class="tn-field">
+              <label>我的名字</label>
+              <input type="text" id="tn-set-myname" value="${escapeHtml(state.settingsDraft.myName)}" />
+            </div>
+            <div class="tn-field">
+              <label>朋友的名字</label>
+              <input type="text" id="tn-set-friendname" value="${escapeHtml(state.settingsDraft.friendName)}" />
+            </div>
+          </div>
+          <div class="tn-field-row">
+            <div class="tn-field">
+              <label>球卡初始金额（元）</label>
+              <input type="number" id="tn-set-initbalance" value="${state.settingsDraft.initialBalance}" />
+            </div>
+          </div>
+          <button class="tn-submit-btn" id="tn-settings-save" style="margin-bottom:8px;">保存</button>
+          <button class="tn-settings-close" id="tn-settings-cancel">取消</button>
+        </div>
+      `;
+    }
+
+    // ===== Quick add: 记一笔 (moved to top for fast logging) =====
+    html += `<div class="tn-quickadd">`;
+    html += `<div class="tn-section-title">🎾 记一笔</div>`;
+    html += `<div class="tn-form-card">`;
+    html += `
+      <div class="tn-toggle-row">
+        <button class="tn-toggle-btn ${state.formMode === 'play' ? 'active' : ''}" id="tn-mode-play">打球</button>
+        <button class="tn-toggle-btn ${state.formMode === 'recharge' ? 'recharge-active' : ''}" id="tn-mode-recharge">充值</button>
+      </div>
+    `;
+
+    if (state.formMode === 'play') {
+      html += `
+        <div class="tn-play-type-row">
+          <button class="tn-play-type-btn ${state.playType === 'together' ? 'selected' : ''}" data-playtype="together">一起打</button>
+          <button class="tn-play-type-btn ${state.playType === 'me' ? 'selected' : ''}" data-playtype="me">${escapeHtml(s.myName)}自己</button>
+          <button class="tn-play-type-btn ${state.playType === 'friend' ? 'selected' : ''}" data-playtype="friend">${escapeHtml(s.friendName)}自己</button>
+        </div>
+        <div class="tn-play-type-row">
+          <button class="tn-play-type-btn ${state.rateType === 'off' ? 'selected' : ''}" data-ratetype="off">闲时 ¥${RATES.off}/小时</button>
+          <button class="tn-play-type-btn ${state.rateType === 'peak' ? 'selected' : ''}" data-ratetype="peak">忙时 ¥${RATES.peak}/小时</button>
+        </div>
+      `;
+    }
+
+    if (state.formMode === 'play') {
+      const computedAmount = Math.round(RATES[state.rateType] * (parseFloat(state.hours) || 0) * 100) / 100;
+      html += `
+        <div class="tn-field-row">
+          <div class="tn-field">
+            <label>日期</label>
+            <input type="date" id="tn-form-date" value="${state.formDate}" />
+          </div>
+          <div class="tn-field">
+            <label>时长（小时）</label>
+            <input type="number" id="tn-form-hours" min="0.5" step="0.5" value="${escapeHtml(String(state.hours))}" />
+          </div>
+        </div>
+        <div class="tn-amount-preview">本次扣费 <strong>${fmtMoney(computedAmount)}</strong></div>
+      `;
+    } else {
+      html += `
+        <div class="tn-field-row">
+          <div class="tn-field">
+            <label>日期</label>
+            <input type="date" id="tn-form-date" value="${state.formDate}" />
+          </div>
+          <div class="tn-field">
+            <label>充值金额（元）</label>
+            <input type="number" id="tn-form-amount" placeholder="如 1000" value="${escapeHtml(state.formAmount)}" />
+          </div>
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="tn-field-row">
+        <div class="tn-field">
+          <label>备注（可选）</label>
+          <input type="text" id="tn-form-note" placeholder="如 球场名称" value="${escapeHtml(state.formNote)}" />
+        </div>
+      </div>
+      <button class="tn-submit-btn ${state.formMode === 'recharge' ? 'recharge' : ''}" id="tn-submit">${state.formMode === 'play' ? '记录这场球' : '记录充值'}</button>
+    `;
+    html += `</div>`;
+    html += `</div>`; // close tn-quickadd
+
+    // ===== Section: 球卡余额 =====
+    html += `<div class="tn-section-title">球卡余额</div>`;
+    html += `
+      <div class="tn-scoreboard">
+        <div class="tn-score-label">球卡余额</div>
+        <div class="tn-score-row">
+          <div class="tn-score-main">${fmtMoney(spending.remaining)}</div>
+          <div class="tn-score-sub">/ ${fmtMoney(spending.totalRecharge)}</div>
+        </div>
+        <div class="tn-court-line">
+          <div class="tn-court-line-fill" style="width:${spending.pct}%"></div>
+          <div class="tn-court-line-ball" style="left:${spending.pct}%"></div>
+        </div>
+        <div class="tn-score-foot">
+          <span>已用 ${fmtMoney(spending.totalSpent)}</span>
+          <span>距上次打球 ${spending.daysSinceLast === null ? '—' : spending.daysSinceLast + ' 天'}</span>
+        </div>
+      </div>
+    `;
+
+    // ===== Section: 打球数据（按维度筛选） =====
+    html += `<div class="tn-section-title">打球数据</div>`;
+    html += `
+      <div class="tn-toggle-row" style="margin-bottom:10px;">
+        <button class="tn-toggle-btn ${state.playFilter === 'month' ? 'active' : ''}" data-playfilter="month">本月</button>
+        <button class="tn-toggle-btn ${state.playFilter === 'year' ? 'active' : ''}" data-playfilter="year">本年</button>
+        <button class="tn-toggle-btn ${state.playFilter === 'all' ? 'active' : ''}" data-playfilter="all">全部</button>
+      </div>
+    `;
+    if (state.playFilter === 'year') {
+      html += `
+        <div style="margin-bottom:10px; display:flex; justify-content:flex-end;">
+          <select id="tn-year-select" class="tn-year-select">
+            ${years.map(y => `<option value="${y}" ${y === state.summaryYear ? 'selected' : ''}>${y} 年</option>`).join('')}
+          </select>
+        </div>
+      `;
+    }
+    html += `<div class="tn-stats">`;
+    html += statCard(playStats.sessionCount, '场', `${filterLabels[state.playFilter]}总场次`);
+    html += statCard(fmtHours(playStats.totalHours), '小时', `${filterLabels[state.playFilter]}总时长`);
+    html += statCard(fmtHours(playStats.togetherHours), '小时', `${filterLabels[state.playFilter]}一起打`);
+    html += statCard(fmtMoney(playStats.totalCost), '', `${filterLabels[state.playFilter]}总花费`);
+    html += statCard(fmtHours(playStats.myHours), '小时', `${escapeHtml(s.myName)}时长`, 'tn-me', AVATAR_TANG);
+    html += statCard(fmtMoney(playStats.myCost), '', `${escapeHtml(s.myName)}花费`, 'tn-me', AVATAR_TANG);
+    html += statCard(fmtHours(playStats.friendHours), '小时', `${escapeHtml(s.friendName)}时长`, 'tn-friend', AVATAR_KE);
+    html += statCard(fmtMoney(playStats.friendCost), '', `${escapeHtml(s.friendName)}花费`, 'tn-friend', AVATAR_KE);
+    html += `</div>`;
+
+    html += `<div class="tn-chart-card">`;
+    html += `
+      <div class="tn-chart-title-row">
+        <div class="tn-chart-title">近6个月打球时长（小时）</div>
+        <select id="tn-chart-dim-select" class="tn-year-select">
+          <option value="me" ${state.chartDimension === 'me' ? 'selected' : ''}>${escapeHtml(s.myName)}</option>
+          <option value="friend" ${state.chartDimension === 'friend' ? 'selected' : ''}>${escapeHtml(s.friendName)}</option>
+          <option value="together" ${state.chartDimension === 'together' ? 'selected' : ''}>一起打</option>
+        </select>
+      </div>
+    `;
+    html += `<div class="tn-chart-bars">`;
+    months.forEach((m, i) => {
+      const h = (m.hours / maxHours) * 100;
+      const isThisMonth = i === months.length - 1;
+      html += `
+        <div class="tn-bar-col">
+          <div class="tn-bar-count">${m.hours > 0 ? fmtHours(m.hours) : ''}</div>
+          <div class="tn-bar ${m.hours > 0 ? 'has-games' : ''} ${isThisMonth ? 'this-week' : ''}" style="height:${m.hours > 0 ? Math.max(h, 8) : 4}%"></div>
+          <div class="tn-bar-label">${monthLabel(m)}</div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+
+    // History
+    html += `<div class="tn-section-title">记录</div>`;
+    if (state.transactions.length === 0) {
+      html += `<div class="tn-empty">还没有记录，记一笔开始追踪吧 🎾</div>`;
+    } else {
+      html += `<div class="tn-history">`;
+      const sorted = [...state.transactions].sort((a,b) => b.date.localeCompare(a.date) || 0);
+      for (const t of sorted) {
+        if (t.kind === 'recharge') {
+          html += `
+            <div class="tn-history-item">
+              <div class="tn-history-icon recharge">+</div>
+              <div class="tn-history-body">
+                <div class="tn-history-title">球卡充值${t.note ? ' · ' + escapeHtml(t.note) : ''}</div>
+                <div class="tn-history-sub">${fmtFullDate(t.date)}</div>
+              </div>
+              <div class="tn-history-amount recharge">+${fmtMoney(t.amount)}</div>
+              <button class="tn-history-del" data-del="${t.id}">×</button>
+            </div>
+          `;
+        } else {
+          const label = t.playType === 'together' ? '一起打' : (t.playType === 'me' ? s.myName + '自己打' : s.friendName + '自己打');
+          const iconClass = t.playType === 'together' ? 'together' : (t.playType === 'me' ? 'me' : 'friend');
+          let iconInner;
+          if (t.playType === 'together') {
+            iconInner = `<img class="tn-pair-avatar a" src="${AVATAR_KE}" alt="" /><img class="tn-pair-avatar b" src="${AVATAR_TANG}" alt="" />`;
+          } else if (t.playType === 'me') {
+            iconInner = `<img src="${AVATAR_TANG}" alt="" />`;
+          } else {
+            iconInner = `<img src="${AVATAR_KE}" alt="" />`;
+          }
+          html += `
+            <div class="tn-history-item">
+              <div class="tn-history-icon ${iconClass}">${iconInner}</div>
+              <div class="tn-history-body">
+                <div class="tn-history-title">${label}${t.note ? ' · ' + escapeHtml(t.note) : ''}</div>
+                <div class="tn-history-sub">${fmtFullDate(t.date)}${t.rateType ? ' · ' + RATE_LABELS[t.rateType] + ' ' + t.hours + 'h' : ''}</div>
+              </div>
+              <div class="tn-history-amount">-${fmtMoney(t.amount)}</div>
+              <button class="tn-history-del" data-del="${t.id}">×</button>
+            </div>
+          `;
+        }
+      }
+      html += `</div>`;
+    }
+
+    root.innerHTML = html;
+    attachHandlers();
+  }
+
+  function statCard(num, unit, label, extraClass, avatar) {
+    return `
+      <div class="tn-stat-card ${extraClass || ''}">
+        ${avatar ? `<img class="tn-stat-avatar" src="${avatar}" alt="" />` : ''}
+        <div class="tn-stat-num">${num}${unit ? `<span class="unit">${unit}</span>` : ''}</div>
+        <div class="tn-stat-label">${label}</div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function attachHandlers() {
+    const settingsBtn = document.getElementById('tn-settings-btn');
+    if (settingsBtn) settingsBtn.onclick = openSettings;
+
+    const setSave = document.getElementById('tn-settings-save');
+    if (setSave) setSave.onclick = () => {
+      state.settingsDraft.myName = document.getElementById('tn-set-myname').value;
+      state.settingsDraft.friendName = document.getElementById('tn-set-friendname').value;
+      state.settingsDraft.initialBalance = document.getElementById('tn-set-initbalance').value;
+      saveSettingsDraft();
+    };
+    const setCancel = document.getElementById('tn-settings-cancel');
+    if (setCancel) setCancel.onclick = () => { state.showSettings = false; render(); };
+
+    document.querySelectorAll('[data-playfilter]').forEach(btn => {
+      btn.onclick = () => {
+        syncFormInputs();
+        state.playFilter = btn.getAttribute('data-playfilter');
+        render();
+      };
+    });
+
+    const yearSelect = document.getElementById('tn-year-select');
+    if (yearSelect) yearSelect.onchange = (e) => {
+      syncFormInputs();
+      state.summaryYear = parseInt(e.target.value, 10);
+      render();
+    };
+
+    const chartDimSelect = document.getElementById('tn-chart-dim-select');
+    if (chartDimSelect) chartDimSelect.onchange = (e) => {
+      syncFormInputs();
+      state.chartDimension = e.target.value;
+      render();
+    };
+
+    const modePlay = document.getElementById('tn-mode-play');
+    if (modePlay) modePlay.onclick = () => {
+      state.formMode = 'play';
+      syncFormInputs();
+      render();
+    };
+    const modeRecharge = document.getElementById('tn-mode-recharge');
+    if (modeRecharge) modeRecharge.onclick = () => {
+      state.formMode = 'recharge';
+      syncFormInputs();
+      render();
+    };
+
+    document.querySelectorAll('[data-playtype]').forEach(btn => {
+      btn.onclick = () => {
+        syncFormInputs();
+        state.playType = btn.getAttribute('data-playtype');
+        render();
+      };
+    });
+
+    document.querySelectorAll('[data-ratetype]').forEach(btn => {
+      btn.onclick = () => {
+        syncFormInputs();
+        state.rateType = btn.getAttribute('data-ratetype');
+        render();
+      };
+    });
+
+    const submitBtn = document.getElementById('tn-submit');
+    if (submitBtn) submitBtn.onclick = () => {
+      syncFormInputs();
+      addTransaction();
+    };
+
+    document.querySelectorAll('[data-del]').forEach(btn => {
+      btn.onclick = () => deleteTransaction(btn.getAttribute('data-del'));
+    });
+
+    // keep form fields in sync as user types, without full re-render (avoid losing focus)
+    const dateInput = document.getElementById('tn-form-date');
+    if (dateInput) dateInput.oninput = (e) => { state.formDate = e.target.value; };
+    const amountInput = document.getElementById('tn-form-amount');
+    if (amountInput) amountInput.oninput = (e) => { state.formAmount = e.target.value; };
+    const hoursInput = document.getElementById('tn-form-hours');
+    if (hoursInput) hoursInput.oninput = (e) => {
+      state.hours = e.target.value;
+      const preview = document.querySelector('.tn-amount-preview strong');
+      if (preview) {
+        const amt = Math.round(RATES[state.rateType] * (parseFloat(state.hours) || 0) * 100) / 100;
+        preview.textContent = fmtMoney(amt);
+      }
+    };
+    const noteInput = document.getElementById('tn-form-note');
+    if (noteInput) noteInput.oninput = (e) => { state.formNote = e.target.value; };
+  }
+
+  function syncFormInputs() {
+    const dateInput = document.getElementById('tn-form-date');
+    const amountInput = document.getElementById('tn-form-amount');
+    const hoursInput = document.getElementById('tn-form-hours');
+    const noteInput = document.getElementById('tn-form-note');
+    if (dateInput) state.formDate = dateInput.value;
+    if (amountInput) state.formAmount = amountInput.value;
+    if (hoursInput) state.hours = hoursInput.value;
+    if (noteInput) state.formNote = noteInput.value;
+  }
+
+  load();
+})();
+</script>
