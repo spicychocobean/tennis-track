@@ -20,79 +20,116 @@
     --clay: #BD5D31; --clay-deep: #A14E27; --court: #1F4035; --court-light: #2E5949;
     --chalk: #F7F3E8; --chalk-dim: #EDE7D8; --ball: #CFE05B; --ink: #211D1A;
     --ink-soft: #6B6258; --line: rgba(33,29,26,0.10);
+    --heart: #D96A8B; --tang: #17A398;
+    --shadow-sm: 0 1px 3px rgba(33,29,26,0.06), 0 1px 2px rgba(33,29,26,0.04);
+    --shadow-md: 0 4px 12px rgba(33,29,26,0.08), 0 2px 4px rgba(33,29,26,0.04);
+    --shadow-lg: 0 10px 30px rgba(31,64,53,0.18);
     font-family: 'Inter', sans-serif; color: var(--ink); background: var(--chalk);
     border-radius: 18px; padding: 16px; max-width: 720px; width: 100%; margin: 0 auto; box-sizing: border-box;
   }
   #tennis-app * { box-sizing: border-box; }
-  .tn-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .tn-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .tn-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--court); margin: 0; display: flex; align-items: center; gap: 10px; }
   .tn-title-ball { width: 26px; height: 26px; flex-shrink: 0; }
   .tn-title span { color: var(--clay); }
   .tn-settings-btn { background: none; border: 1.5px solid var(--line); border-radius: 8px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; color: var(--ink-soft); transition: all 0.15s ease; }
   .tn-settings-btn:hover { border-color: var(--clay); color: var(--clay); }
-  .tn-scoreboard { background: var(--court); border-radius: 14px; padding: 22px 24px; color: var(--chalk); margin-bottom: 16px; position: relative; overflow: hidden; }
+  .tn-settings-btn:active { transform: scale(0.92); }
+
+  .tn-tabs { display: flex; gap: 6px; background: var(--chalk-dim); border-radius: 12px; padding: 4px; margin-bottom: 18px; box-shadow: inset 0 1px 2px rgba(33,29,26,0.05); }
+  .tn-tab { flex: 1; border: none; background: transparent; padding: 11px 4px; border-radius: 9px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--ink-soft); cursor: pointer; transition: all 0.2s ease; }
+  .tn-tab.active { background: var(--court); color: var(--chalk); box-shadow: var(--shadow-sm); }
+  .tn-tab:active { transform: scale(0.97); }
+
+  .tn-scoreboard { background: var(--court); border-radius: 14px; padding: 22px 24px; color: var(--chalk); margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: var(--shadow-lg); }
   .tn-scoreboard::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 6px; background: repeating-linear-gradient(to bottom, var(--ball) 0 10px, transparent 10px 20px); opacity: 0.6; }
   .tn-score-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ball); font-weight: 600; margin: 0 0 6px 0; }
   .tn-score-row { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
-  .tn-score-main { font-family: 'JetBrains Mono', monospace; font-size: 44px; font-weight: 700; line-height: 1; letter-spacing: 1px; }
+  .tn-score-main { font-family: 'JetBrains Mono', monospace; font-size: 44px; font-weight: 700; line-height: 1; letter-spacing: 1px; animation: tnGlow 3s ease-in-out infinite; }
+  @keyframes tnGlow { 0%,100% { text-shadow: 0 0 0 rgba(207,224,91,0); } 50% { text-shadow: 0 0 14px rgba(207,224,91,0.35); } }
   .tn-score-sub { font-family: 'JetBrains Mono', monospace; font-size: 16px; color: rgba(247,243,232,0.55); padding-bottom: 6px; }
   .tn-court-line { margin-top: 16px; height: 6px; border-radius: 4px; background: rgba(247,243,232,0.12); position: relative; overflow: hidden; }
-  .tn-court-line-fill { position: absolute; top: 0; left: 0; bottom: 0; background: var(--clay); border-radius: 4px; transition: width 0.4s ease; }
-  .tn-court-line-ball { position: absolute; top: 50%; width: 14px; height: 14px; background: var(--ball); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 3px var(--court); transition: left 0.4s ease; }
+  .tn-court-line-fill { position: absolute; top: 0; left: 0; bottom: 0; background: var(--clay); border-radius: 4px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+  .tn-court-line-ball { position: absolute; top: 50%; width: 14px; height: 14px; background: var(--ball); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 3px var(--court), 0 0 10px rgba(207,224,91,0.6); transition: left 0.6s cubic-bezier(0.34,1.56,0.64,1); }
   .tn-score-foot { margin-top: 10px; font-size: 12px; color: rgba(247,243,232,0.6); display: flex; justify-content: space-between; }
-  .tn-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
-  @media (max-width: 520px) { .tn-stats { grid-template-columns: repeat(2, 1fr); } }
-  .tn-stat-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; position: relative; }
-  .tn-stat-num { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; color: var(--ink); line-height: 1.1; }
-  .tn-stat-num .unit { font-size: 13px; color: var(--ink-soft); font-family: 'Inter', sans-serif; font-weight: 500; margin-left: 2px; }
-  .tn-stat-label { font-size: 11px; color: var(--ink-soft); margin-top: 4px; letter-spacing: 0.3px; }
-  .tn-stat-card.tn-me .tn-stat-num { color: var(--court); }
+
+  .tn-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .tn-stats-secondary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .tn-stat-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; position: relative; box-shadow: var(--shadow-sm); transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .tn-stat-card:not(.secondary):hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .tn-stat-card.secondary { background: transparent; border: 1px dashed var(--line); box-shadow: none; }
+  .tn-stat-num { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.1; }
+  .tn-stat-num .unit { font-size: 12px; color: var(--ink-soft); font-family: 'Inter', sans-serif; font-weight: 500; margin-left: 2px; }
+  .tn-stat-label { font-size: 11px; color: var(--ink-soft); margin-top: 4px; letter-spacing: 0.3px; display: flex; align-items: center; gap: 3px; }
+  .tn-stat-card.tn-me .tn-stat-num { color: var(--tang); }
   .tn-stat-card.tn-friend .tn-stat-num { color: var(--clay); }
+  .tn-stat-card.tn-together .tn-stat-num { color: var(--heart); }
+
   .tn-section-title { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); margin: 22px 0 10px 0; padding-bottom: 8px; border-bottom: 1px dashed var(--line); display: flex; align-items: center; gap: 8px; }
-  .tn-year-select { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--ink); background: #fff; border: 1.5px solid var(--line); border-radius: 6px; padding: 5px 8px; cursor: pointer; }
+  .tn-year-select, .tn-month-select { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--ink); background: #fff; border: 1.5px solid var(--line); border-radius: 6px; padding: 5px 8px; cursor: pointer; }
   .tn-chart-title { font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; letter-spacing: 0.3px; }
-  .tn-chart-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .tn-chart-title-row .tn-chart-title { margin-bottom: 0; }
-  .tn-stat-avatar { position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 3px rgba(33,29,26,0.18); }
+
+  .tn-stat-avatar { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 3px rgba(33,29,26,0.18); }
   .tn-history-icon img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; display: block; }
-  .tn-history-icon.together { position: relative; background: var(--court); }
-  .tn-history-icon.together .tn-pair-avatar { position: absolute; width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--court); }
-  .tn-history-icon.together .tn-pair-avatar.a { top: -2px; left: -2px; z-index: 2; }
-  .tn-history-icon.together .tn-pair-avatar.b { bottom: -2px; right: -2px; }
-  .tn-quickadd { background: linear-gradient(135deg, rgba(207,224,91,0.20), rgba(189,93,49,0.06)); border: 1.5px solid rgba(189,93,49,0.22); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+  .tn-history-icon.together { position: relative; background: linear-gradient(135deg, var(--court), var(--court-light)); overflow: visible; }
+  .tn-history-icon.together .tn-pair-avatar { position: absolute; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(33,29,26,0.3); }
+  .tn-history-icon.together .tn-pair-avatar.a { top: -3px; left: -4px; z-index: 2; }
+  .tn-history-icon.together .tn-pair-avatar.b { bottom: -3px; right: -4px; z-index: 1; }
+  .tn-history-icon.together .tn-heart-badge { position: absolute; top: -7px; right: -7px; font-size: 12px; z-index: 4; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25)); animation: tnHeartBeat 1.6s ease-in-out infinite; }
+  @keyframes tnHeartBeat { 0%,100% { transform: scale(1); } 15% { transform: scale(1.25); } 30% { transform: scale(1); } }
+
+  .tn-quickadd { background: linear-gradient(135deg, rgba(207,224,91,0.20), rgba(189,93,49,0.06)); border: 1.5px solid rgba(189,93,49,0.22); border-radius: 16px; padding: 16px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
   .tn-quickadd .tn-section-title { margin-top: 0; border-bottom: 1px dashed rgba(189,93,49,0.25); }
-  .tn-form-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .tn-form-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); }
   .tn-toggle-row { display: flex; gap: 6px; margin-bottom: 12px; background: var(--chalk-dim); border-radius: 10px; padding: 4px; }
-  .tn-toggle-btn { flex: 1; border: none; background: transparent; padding: 9px 4px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.15s ease; }
-  .tn-toggle-btn.active { background: var(--court); color: var(--chalk); }
-  .tn-toggle-btn.recharge-active { background: var(--clay); color: var(--chalk); }
+  .tn-toggle-btn { flex: 1; border: none; background: transparent; padding: 9px 4px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.18s ease; }
+  .tn-toggle-btn.active { background: var(--court); color: var(--chalk); box-shadow: var(--shadow-sm); }
+  .tn-toggle-btn.recharge-active { background: var(--clay); color: var(--chalk); box-shadow: var(--shadow-sm); }
+  .tn-toggle-btn:active { transform: scale(0.97); }
   .tn-field-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
   .tn-field { flex: 1; min-width: 130px; }
   .tn-field label { display: block; font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; letter-spacing: 0.3px; }
-  .tn-field input, .tn-field select { width: 100%; padding: 9px 10px; border: 1.5px solid var(--line); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--ink); background: var(--chalk); }
-  .tn-field input:focus, .tn-field select:focus { outline: none; border-color: var(--court); }
+  .tn-field input, .tn-field select { width: 100%; padding: 9px 10px; border: 1.5px solid var(--line); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--ink); background: var(--chalk); transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+  .tn-field input:focus, .tn-field select:focus { outline: none; border-color: var(--court); box-shadow: 0 0 0 3px rgba(31,64,53,0.1); }
   .tn-amount-preview { font-size: 13px; color: var(--ink-soft); margin-bottom: 10px; }
   .tn-amount-preview strong { font-family: 'JetBrains Mono', monospace; color: var(--court); font-size: 15px; }
   .tn-play-type-row { display: flex; gap: 6px; margin-bottom: 10px; }
-  .tn-play-type-btn { flex: 1; border: 1.5px solid var(--line); background: var(--chalk); padding: 10px 6px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; text-align: center; transition: all 0.15s ease; }
-  .tn-play-type-btn.selected { border-color: var(--court); background: var(--court); color: var(--chalk); }
-  .tn-submit-btn { width: 100%; border: none; background: var(--court); color: var(--chalk); padding: 12px; border-radius: 8px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background 0.15s ease; }
-  .tn-submit-btn:hover { background: var(--court-light); }
+  .tn-play-type-btn { flex: 1; border: 1.5px solid var(--line); background: var(--chalk); padding: 10px 6px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; text-align: center; transition: all 0.18s ease; }
+  .tn-play-type-btn.selected { border-color: var(--court); background: var(--court); color: var(--chalk); box-shadow: var(--shadow-sm); }
+  .tn-play-type-btn:active { transform: scale(0.97); }
+  .tn-submit-btn { width: 100%; border: none; background: var(--court); color: var(--chalk); padding: 12px; border-radius: 8px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.18s ease; box-shadow: var(--shadow-sm); }
+  .tn-submit-btn:hover { background: var(--court-light); box-shadow: var(--shadow-md); }
+  .tn-submit-btn:active { transform: scale(0.98); }
   .tn-submit-btn.recharge { background: var(--clay); }
   .tn-submit-btn.recharge:hover { background: var(--clay-deep); }
-  .tn-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
-  .tn-chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 90px; }
-  .tn-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
-  .tn-bar { width: 100%; border-radius: 4px 4px 2px 2px; background: var(--chalk-dim); min-height: 4px; transition: height 0.3s ease; }
-  .tn-bar.has-games { background: var(--court); }
-  .tn-bar.this-week { background: var(--clay); }
-  .tn-bar-label { font-size: 10px; color: var(--ink-soft); margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
-  .tn-bar-count { font-size: 11px; font-weight: 600; color: var(--ink); margin-bottom: 3px; font-family: 'JetBrains Mono', monospace; }
+  .tn-cancel-edit { width: 100%; border: 1.5px solid var(--line); background: var(--chalk); padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; margin-top: 8px; transition: all 0.15s ease; }
+  .tn-cancel-edit:active { transform: scale(0.98); }
+
+  .tn-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); }
+  .tn-linechart { width: 100%; height: auto; display: block; overflow: visible; }
+  .tn-line-path { fill: none; stroke-width: 3; transition: opacity 0.25s ease, stroke-width 0.25s ease; }
+  .tn-line-dot { transition: opacity 0.25s ease, r 0.25s ease; }
+  .tn-line-dimmed { opacity: 0.15; }
+  .tn-line-value { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; font-weight: 600; }
+  .tn-legend { display: flex; justify-content: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .tn-legend-item { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px; border: 1.5px solid var(--line); background: var(--chalk); font-size: 12px; font-weight: 500; color: var(--ink); cursor: pointer; transition: all 0.18s ease; }
+  .tn-legend-item:active { transform: scale(0.96); }
+  .tn-legend-item.focused { border-color: var(--ink); box-shadow: var(--shadow-sm); }
+  .tn-legend-item.faded { opacity: 0.4; }
+  .tn-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  .tn-settle-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+  .tn-settle-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; }
+  .tn-settle-row + .tn-settle-row { border-top: 1px dashed var(--line); }
+  .tn-settle-name { color: var(--ink-soft); }
+  .tn-settle-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--ink); }
+  .tn-settle-result { margin-top: 12px; padding: 12px; border-radius: 10px; background: linear-gradient(135deg, rgba(207,224,91,0.25), rgba(31,64,53,0.06)); font-size: 14px; font-weight: 600; color: var(--court); text-align: center; }
+
   .tn-history { display: flex; flex-direction: column; gap: 8px; }
-  .tn-history-item { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; }
+  .tn-history-item { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .tn-history-item:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
   .tn-history-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; color: var(--chalk); }
-  .tn-history-icon.together { background: var(--court); }
-  .tn-history-icon.me { background: var(--court-light); }
+  .tn-history-icon.me { background: var(--tang); }
   .tn-history-icon.friend { background: var(--clay); }
   .tn-history-icon.recharge { background: var(--ball); color: var(--ink); }
   .tn-history-body { flex: 1; min-width: 0; }
@@ -100,13 +137,19 @@
   .tn-history-sub { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
   .tn-history-amount { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; }
   .tn-history-amount.recharge { color: #5C8A2E; }
-  .tn-history-del { border: none; background: none; color: var(--ink-soft); font-size: 16px; cursor: pointer; padding: 2px 4px; border-radius: 6px; line-height: 1; }
+  .tn-history-actions { display: flex; gap: 2px; }
+  .tn-history-edit, .tn-history-del { border: none; background: none; color: var(--ink-soft); font-size: 15px; cursor: pointer; padding: 2px 5px; border-radius: 6px; line-height: 1; transition: all 0.15s ease; }
+  .tn-history-edit:hover { color: var(--court); background: var(--chalk-dim); }
   .tn-history-del:hover { color: var(--clay); background: var(--chalk-dim); }
+  .tn-history-edit:active, .tn-history-del:active { transform: scale(0.9); }
+  .tn-history-item.editing { border-color: var(--court); box-shadow: 0 0 0 2px rgba(31,64,53,0.12); }
+
   .tn-empty { text-align: center; color: var(--ink-soft); font-size: 13px; padding: 24px 0; }
-  .tn-settings-panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .tn-settings-panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-md); }
   .tn-settings-panel .tn-field-row:last-child { margin-bottom: 0; }
   .tn-settings-close { width: 100%; border: 1.5px solid var(--line); background: var(--chalk); padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; margin-top: 4px; }
   .tn-loading { text-align: center; padding: 40px 0; color: var(--ink-soft); font-size: 13px; }
+
   @media (max-width: 600px) {
     #tennis-app { padding: 12px; border-radius: 0; }
     .tn-score-main { font-size: 36px; }
@@ -120,7 +163,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function() {
-  // ===== Supabase 连接配置（已填入你的项目信息）=====
   const SUPABASE_URL = 'https://kxcbtbnxnizruzrbidhh.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4Y2J0Ym54bml6cnV6cmJpZGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzA5NzcsImV4cCI6MjA5NzAwNjk3N30.J2X5Kh4RYCL6_KJdHzM8F1y-vU-na0VKnGZbTRxCQjc';
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -131,30 +173,36 @@
     loaded: false,
     settings: { myName: '小唐', friendName: '小柯', initialBalance: 20000 },
     transactions: [],
+    activeTab: 'record',
     formMode: 'play', playType: 'together', rateType: 'off', hours: 1,
+    payer: 'split',
     formDate: new Date().toISOString().slice(0,10),
     formAmount: '', formNote: '',
+    editingId: null,
     showSettings: false, settingsDraft: null,
-    playFilter: 'month', summaryYear: new Date().getFullYear(), chartDimension: 'me'
+    playFilter: 'month',
+    filterMonth: new Date().toISOString().slice(0,7),
+    summaryYear: new Date().getFullYear(),
+    focusLine: null
   };
 
   function uid() { return 't' + Date.now() + Math.random().toString(36).slice(2,7); }
   const RATES = { off: 425, peak: 467.5 };
   const RATE_LABELS = { off: '闲时', peak: '忙时' };
-  const AVATAR_TANG = './tang.png';
-  const AVATAR_KE = './ke.png';
+  const AVATAR_TANG = './tang.jpg';
+  const AVATAR_KE = './ke.jpg';
 
-  // ===== 数据库读写（Supabase）=====
-  // 数据库字段是下划线命名(play_type)，前端用驼峰(playType)，下面两个函数负责互转
   function rowToTx(r) {
     return { id: r.id, kind: r.kind, date: r.date, amount: Number(r.amount), note: r.note || '',
       playType: r.play_type || undefined, rateType: r.rate_type || undefined,
-      hours: r.hours === null || r.hours === undefined ? undefined : Number(r.hours) };
+      hours: (r.hours === null || r.hours === undefined) ? undefined : Number(r.hours),
+      payer: r.payer || undefined };
   }
   function txToRow(t) {
     return { id: t.id, kind: t.kind, date: t.date, amount: t.amount, note: t.note || null,
       play_type: t.playType || null, rate_type: t.rateType || null,
-      hours: (t.hours === undefined || t.hours === null) ? null : t.hours };
+      hours: (t.hours === undefined || t.hours === null) ? null : t.hours,
+      payer: t.payer || null };
   }
 
   async function load() {
@@ -163,157 +211,179 @@
       if (txErr) throw txErr;
       state.transactions = (txData || []).map(rowToTx);
     } catch (e) { console.error('加载记录失败', e); }
-
     try {
       const { data: setData, error: setErr } = await sb.from('settings').select('*').eq('id', 1).single();
       if (setErr) throw setErr;
-      if (setData) {
-        state.settings = {
-          myName: setData.my_name || '小唐',
-          friendName: setData.friend_name || '小柯',
-          initialBalance: Number(setData.initial_balance) || 20000
-        };
-      }
+      if (setData) { state.settings = { myName: setData.my_name || '小唐', friendName: setData.friend_name || '小柯', initialBalance: Number(setData.initial_balance) || 20000 }; }
     } catch (e) { console.error('加载设置失败', e); }
-
     state.loaded = true;
     render();
   }
 
-  async function dbInsertTx(t) {
-    const { error } = await sb.from('transactions').insert(txToRow(t));
-    if (error) { console.error('保存记录失败', error); alert('保存失败，请检查网络或稍后再试'); }
-  }
-  async function dbDeleteTx(id) {
-    const { error } = await sb.from('transactions').delete().eq('id', id);
-    if (error) { console.error('删除记录失败', error); alert('删除失败，请稍后再试'); }
-  }
+  async function dbInsertTx(t) { const { error } = await sb.from('transactions').insert(txToRow(t)); if (error) { console.error(error); alert('保存失败，请稍后再试'); } }
+  async function dbUpdateTx(t) { const { error } = await sb.from('transactions').update(txToRow(t)).eq('id', t.id); if (error) { console.error(error); alert('更新失败，请稍后再试'); } }
+  async function dbDeleteTx(id) { const { error } = await sb.from('transactions').delete().eq('id', id); if (error) { console.error(error); alert('删除失败，请稍后再试'); } }
   async function dbSaveSettings() {
     const row = { id: 1, my_name: state.settings.myName, friend_name: state.settings.friendName, initial_balance: state.settings.initialBalance };
-    const { error } = await sb.from('settings').upsert(row);
-    if (error) { console.error('保存设置失败', error); alert('设置保存失败，请稍后再试'); }
+    const { error } = await sb.from('settings').upsert(row); if (error) { console.error(error); alert('设置保存失败'); }
   }
 
   function fmtMoney(n) { return '¥' + Number(n).toLocaleString('zh-CN', { maximumFractionDigits: 2 }); }
-  function fmtFullDate(d) {
-    const dt = new Date(d + 'T00:00:00');
-    return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
-  }
+  function fmtFullDate(d) { const dt = new Date(d + 'T00:00:00'); return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); }
+  function fmtHours(n) { return Number(n.toFixed(1)).toString(); }
 
   function computeSpendingStats() {
     const s = state.settings;
-    let totalRecharge = s.initialBalance, totalSpent = 0, myShare = 0, friendShare = 0, playCount = 0, lastPlayDate = null;
+    let totalRecharge = s.initialBalance, totalSpent = 0, playCount = 0, lastPlayDate = null;
     for (const t of state.transactions) {
       if (t.kind === 'recharge') { totalRecharge += Number(t.amount); }
-      else {
-        totalSpent += Number(t.amount); playCount++;
-        if (t.playType === 'together') { myShare += Number(t.amount)/2; friendShare += Number(t.amount)/2; }
-        else if (t.playType === 'me') { myShare += Number(t.amount); }
-        else if (t.playType === 'friend') { friendShare += Number(t.amount); }
-        if (!lastPlayDate || t.date > lastPlayDate) lastPlayDate = t.date;
-      }
+      else { totalSpent += Number(t.amount); playCount++; if (!lastPlayDate || t.date > lastPlayDate) lastPlayDate = t.date; }
     }
     const remaining = totalRecharge - totalSpent;
     const pct = totalRecharge > 0 ? Math.max(0, Math.min(100, (remaining/totalRecharge)*100)) : 0;
     let daysSinceLast = null;
-    if (lastPlayDate) {
-      const d1 = new Date(lastPlayDate + 'T00:00:00'); const d2 = new Date(); d2.setHours(0,0,0,0);
-      daysSinceLast = Math.round((d2 - d1) / 86400000);
-    }
-    return { totalRecharge, totalSpent, remaining, pct, myShare, friendShare, playCount, daysSinceLast };
+    if (lastPlayDate) { const d1 = new Date(lastPlayDate + 'T00:00:00'); const d2 = new Date(); d2.setHours(0,0,0,0); daysSinceLast = Math.round((d2 - d1) / 86400000); }
+    return { totalRecharge, totalSpent, remaining, pct, playCount, daysSinceLast };
   }
 
-  function computePlayStats(filter, year) {
-    const now = new Date(); let startDate = null, endDate = null;
-    if (filter === 'month') { startDate = new Date(now.getFullYear(), now.getMonth(), 1); }
-    else if (filter === 'year') { const y = year || now.getFullYear(); startDate = new Date(y, 0, 1); endDate = new Date(y + 1, 0, 1); }
-    let sessionCount = 0, totalHours = 0, totalCost = 0, myHours = 0, friendHours = 0, togetherHours = 0, myCost = 0, friendCost = 0;
+  function computeSettlement() {
+    const s = state.settings;
+    let myPaid = s.initialBalance / 2, friendPaid = s.initialBalance / 2, myUsed = 0, friendUsed = 0;
+    for (const t of state.transactions) {
+      if (t.kind === 'recharge') {
+        const amt = Number(t.amount); const payer = t.payer || 'split';
+        if (payer === 'me') myPaid += amt; else if (payer === 'friend') friendPaid += amt; else { myPaid += amt/2; friendPaid += amt/2; }
+      } else {
+        const amt = Number(t.amount);
+        if (t.playType === 'together') { myUsed += amt/2; friendUsed += amt/2; }
+        else if (t.playType === 'me') { myUsed += amt; } else if (t.playType === 'friend') { friendUsed += amt; }
+      }
+    }
+    return { myPaid, friendPaid, myUsed, friendUsed, myNet: myPaid - myUsed, friendNet: friendPaid - friendUsed };
+  }
+
+  function inFilter(t) {
+    if (state.playFilter === 'all') return true;
+    if (state.playFilter === 'month') return t.date.slice(0,7) === state.filterMonth;
+    if (state.playFilter === 'year') return new Date(t.date + 'T00:00:00').getFullYear() === state.summaryYear;
+    return true;
+  }
+
+  function computePlayStats() {
+    let myHours = 0, friendHours = 0, togetherHours = 0, myCost = 0, friendCost = 0, totalCost = 0;
     for (const t of state.transactions) {
       if (t.kind !== 'play') continue;
-      const d = new Date(t.date + 'T00:00:00');
-      if (startDate && d < startDate) continue;
-      if (endDate && d >= endDate) continue;
+      if (!inFilter(t)) continue;
       const hours = Number(t.hours) || 0, amount = Number(t.amount) || 0;
-      sessionCount++; totalHours += hours; totalCost += amount;
+      totalCost += amount;
       if (t.playType === 'together') { togetherHours += hours; myHours += hours; friendHours += hours; myCost += amount/2; friendCost += amount/2; }
       else if (t.playType === 'me') { myHours += hours; myCost += amount; }
       else if (t.playType === 'friend') { friendHours += hours; friendCost += amount; }
     }
-    return { sessionCount, totalHours, totalCost, myHours, friendHours, togetherHours, myCost, friendCost };
+    return { myHours, friendHours, togetherHours, myCost, friendCost, totalCost };
   }
 
   function getAvailableYears() {
     const years = new Set(); years.add(new Date().getFullYear());
-    for (const t of state.transactions) { if (t.kind === 'play') years.add(new Date(t.date + 'T00:00:00').getFullYear()); }
+    for (const t of state.transactions) years.add(new Date(t.date + 'T00:00:00').getFullYear());
     return Array.from(years).sort((a, b) => b - a);
   }
-  function fmtHours(n) { return Number(n.toFixed(1)).toString(); }
+  function getAvailableMonths() {
+    const months = new Set(); months.add(new Date().toISOString().slice(0,7));
+    for (const t of state.transactions) months.add(t.date.slice(0,7));
+    return Array.from(months).sort((a, b) => b.localeCompare(a));
+  }
 
-  function computeMonthlyChart(dimension) {
+  function computeMonthlySeries() {
     const months = []; const now = new Date();
-    for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); months.push({ year: d.getFullYear(), month: d.getMonth(), hours: 0 }); }
+    for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); months.push({ year: d.getFullYear(), month: d.getMonth(), me: 0, friend: 0, together: 0 }); }
     for (const t of state.transactions) {
       if (t.kind !== 'play') continue;
-      const hours = Number(t.hours) || 0; let include = false;
-      if (dimension === 'together') include = t.playType === 'together';
-      else if (dimension === 'friend') include = t.playType === 'friend' || t.playType === 'together';
-      else include = t.playType === 'me' || t.playType === 'together';
-      if (!include) continue;
+      const hours = Number(t.hours) || 0;
       const d = new Date(t.date + 'T00:00:00');
-      for (const m of months) { if (d.getFullYear() === m.year && d.getMonth() === m.month) { m.hours += hours; break; } }
+      const m = months.find(mm => mm.year === d.getFullYear() && mm.month === d.getMonth());
+      if (!m) continue;
+      if (t.playType === 'together') { m.together += hours; m.me += hours; m.friend += hours; }
+      else if (t.playType === 'me') { m.me += hours; }
+      else if (t.playType === 'friend') { m.friend += hours; }
     }
     return months;
   }
 
-  async function addTransaction() {
-    let amount;
-    if (state.formMode === 'play') {
-      const hours = parseFloat(state.hours);
-      if (!hours || hours <= 0) return;
-      amount = Math.round(RATES[state.rateType] * hours * 100) / 100;
-    } else {
-      amount = parseFloat(state.formAmount);
-      if (!amount || amount <= 0) return;
-    }
-    const tx = { id: uid(), kind: state.formMode, date: state.formDate, amount: amount, note: state.formNote.trim() };
-    if (state.formMode === 'play') { tx.playType = state.playType; tx.rateType = state.rateType; tx.hours = parseFloat(state.hours); }
-    state.transactions.push(tx);
+  function resetForm() {
+    state.editingId = null; state.formMode = 'play'; state.playType = 'together'; state.rateType = 'off';
+    state.hours = 1; state.payer = 'split'; state.formDate = new Date().toISOString().slice(0,10);
     state.formAmount = ''; state.formNote = '';
+  }
+
+  async function submitForm() {
+    let amount;
+    if (state.formMode === 'play') { const hours = parseFloat(state.hours); if (!hours || hours <= 0) return; amount = Math.round(RATES[state.rateType] * hours * 100) / 100; }
+    else { amount = parseFloat(state.formAmount); if (!amount || amount <= 0) return; }
+    if (state.editingId) {
+      const t = state.transactions.find(x => x.id === state.editingId);
+      if (t) {
+        t.kind = state.formMode; t.date = state.formDate; t.amount = amount; t.note = state.formNote.trim();
+        if (state.formMode === 'play') { t.playType = state.playType; t.rateType = state.rateType; t.hours = parseFloat(state.hours); t.payer = undefined; }
+        else { t.payer = state.payer; t.playType = undefined; t.rateType = undefined; t.hours = undefined; }
+        render(); await dbUpdateTx(t);
+      }
+      resetForm(); render();
+    } else {
+      const tx = { id: uid(), kind: state.formMode, date: state.formDate, amount: amount, note: state.formNote.trim() };
+      if (state.formMode === 'play') { tx.playType = state.playType; tx.rateType = state.rateType; tx.hours = parseFloat(state.hours); }
+      else { tx.payer = state.payer; }
+      state.transactions.push(tx);
+      resetForm(); render(); await dbInsertTx(tx);
+    }
+  }
+
+  function startEdit(id) {
+    const t = state.transactions.find(x => x.id === id); if (!t) return;
+    state.activeTab = 'record'; state.editingId = id; state.formMode = t.kind; state.formDate = t.date; state.formNote = t.note || '';
+    if (t.kind === 'play') { state.playType = t.playType || 'together'; state.rateType = t.rateType || 'off'; state.hours = t.hours || 1; }
+    else { state.payer = t.payer || 'split'; state.formAmount = String(t.amount); }
     render();
-    await dbInsertTx(tx);
+    root.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async function deleteTransaction(id) {
+    if (state.editingId === id) resetForm();
     state.transactions = state.transactions.filter(t => t.id !== id);
-    render();
-    await dbDeleteTx(id);
+    render(); await dbDeleteTx(id);
   }
 
   function openSettings() {
     state.settingsDraft = { myName: state.settings.myName, friendName: state.settings.friendName, initialBalance: state.settings.initialBalance };
     state.showSettings = true; render();
   }
-
   async function saveSettingsDraft() {
     state.settings.myName = state.settingsDraft.myName.trim() || '我';
     state.settings.friendName = state.settingsDraft.friendName.trim() || '朋友';
-    const ib = parseFloat(state.settingsDraft.initialBalance);
-    state.settings.initialBalance = isNaN(ib) ? 20000 : ib;
-    state.showSettings = false;
-    render();
-    await dbSaveSettings();
+    const ib = parseFloat(state.settingsDraft.initialBalance); state.settings.initialBalance = isNaN(ib) ? 20000 : ib;
+    state.showSettings = false; render(); await dbSaveSettings();
+  }
+
+  function escapeHtml(str) { return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function animateBalance() {
+    const el = root.querySelector('[data-count-to]');
+    if (!el) return;
+    const target = parseFloat(el.getAttribute('data-count-to')) || 0;
+    const prefix = el.getAttribute('data-prefix') || '';
+    const duration = 600; const start = performance.now();
+    function frame(now) {
+      let p = Math.min(1, (now - start) / duration); p = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + Math.round(target * p).toLocaleString('zh-CN');
+      if (p < 1) requestAnimationFrame(frame);
+      else el.textContent = prefix + Math.round(target).toLocaleString('zh-CN');
+    }
+    requestAnimationFrame(frame);
   }
 
   function render() {
     if (!state.loaded) { root.innerHTML = '<div class="tn-loading">加载中...</div>'; return; }
-    const spending = computeSpendingStats();
-    const playStats = computePlayStats(state.playFilter, state.summaryYear);
-    const years = getAvailableYears();
-    const months = computeMonthlyChart(state.chartDimension);
-    const maxHours = Math.max(1, ...months.map(m => m.hours));
     const s = state.settings;
-    const monthLabel = (m) => (m.month + 1) + '月';
-    const filterLabels = { month: '本月', year: state.summaryYear + '年', all: '全部' };
     let html = '';
 
     html += '<div class="tn-header"><h1 class="tn-title">'
@@ -324,6 +394,10 @@
       + '</svg>网球<span>记录</span>本</h1>'
       + '<button class="tn-settings-btn" id="tn-settings-btn">⚙</button></div>';
 
+    html += '<div class="tn-tabs">'
+      + '<button class="tn-tab ' + (state.activeTab === 'record' ? 'active' : '') + '" data-tab="record">记录</button>'
+      + '<button class="tn-tab ' + (state.activeTab === 'dashboard' ? 'active' : '') + '" data-tab="dashboard">数据看板</button></div>';
+
     if (state.showSettings) {
       html += '<div class="tn-settings-panel"><div class="tn-field-row">'
         + '<div class="tn-field"><label>我的名字</label><input type="text" id="tn-set-myname" value="' + escapeHtml(state.settingsDraft.myName) + '" /></div>'
@@ -333,14 +407,26 @@
         + '<button class="tn-settings-close" id="tn-settings-cancel">取消</button></div>';
     }
 
-    html += '<div class="tn-quickadd"><div class="tn-section-title">🎾 记一笔</div><div class="tn-form-card">';
+    if (state.activeTab === 'record') html += renderRecord(s);
+    else html += renderDashboard(s);
+
+    root.innerHTML = html;
+    attachHandlers();
+    if (state.activeTab === 'record') animateBalance();
+  }
+
+  function renderRecord(s) {
+    const spending = computeSpendingStats();
+    let html = '';
+
+    html += '<div class="tn-quickadd"><div class="tn-section-title">🎾 ' + (state.editingId ? '编辑记录' : '记一笔') + '</div><div class="tn-form-card">';
     html += '<div class="tn-toggle-row">'
       + '<button class="tn-toggle-btn ' + (state.formMode === 'play' ? 'active' : '') + '" id="tn-mode-play">打球</button>'
       + '<button class="tn-toggle-btn ' + (state.formMode === 'recharge' ? 'recharge-active' : '') + '" id="tn-mode-recharge">充值</button></div>';
 
     if (state.formMode === 'play') {
       html += '<div class="tn-play-type-row">'
-        + '<button class="tn-play-type-btn ' + (state.playType === 'together' ? 'selected' : '') + '" data-playtype="together">一起打</button>'
+        + '<button class="tn-play-type-btn ' + (state.playType === 'together' ? 'selected' : '') + '" data-playtype="together">一起打 ♥</button>'
         + '<button class="tn-play-type-btn ' + (state.playType === 'me' ? 'selected' : '') + '" data-playtype="me">' + escapeHtml(s.myName) + '自己</button>'
         + '<button class="tn-play-type-btn ' + (state.playType === 'friend' ? 'selected' : '') + '" data-playtype="friend">' + escapeHtml(s.friendName) + '自己</button></div>'
         + '<div class="tn-play-type-row">'
@@ -352,53 +438,25 @@
         + '<div class="tn-field"><label>时长（小时）</label><input type="number" id="tn-form-hours" min="0.5" step="0.5" value="' + escapeHtml(String(state.hours)) + '" /></div></div>'
         + '<div class="tn-amount-preview">本次扣费 <strong>' + fmtMoney(computedAmount) + '</strong></div>';
     } else {
-      html += '<div class="tn-field-row">'
+      html += '<div class="tn-play-type-row">'
+        + '<button class="tn-play-type-btn ' + (state.payer === 'me' ? 'selected' : '') + '" data-payer="me">' + escapeHtml(s.myName) + '出</button>'
+        + '<button class="tn-play-type-btn ' + (state.payer === 'friend' ? 'selected' : '') + '" data-payer="friend">' + escapeHtml(s.friendName) + '出</button>'
+        + '<button class="tn-play-type-btn ' + (state.payer === 'split' ? 'selected' : '') + '" data-payer="split">两人各半</button></div>'
+        + '<div class="tn-field-row">'
         + '<div class="tn-field"><label>日期</label><input type="date" id="tn-form-date" value="' + state.formDate + '" /></div>'
-        + '<div class="tn-field"><label>充值金额（元）</label><input type="number" id="tn-form-amount" placeholder="如 1000" value="' + escapeHtml(state.formAmount) + '" /></div></div>';
+        + '<div class="tn-field"><label>充值金额（元）</label><input type="number" id="tn-form-amount" placeholder="如 10000" value="' + escapeHtml(state.formAmount) + '" /></div></div>';
     }
 
     html += '<div class="tn-field-row"><div class="tn-field"><label>备注（可选）</label><input type="text" id="tn-form-note" placeholder="如 球场名称" value="' + escapeHtml(state.formNote) + '" /></div></div>'
-      + '<button class="tn-submit-btn ' + (state.formMode === 'recharge' ? 'recharge' : '') + '" id="tn-submit">' + (state.formMode === 'play' ? '记录这场球' : '记录充值') + '</button></div></div>';
+      + '<button class="tn-submit-btn ' + (state.formMode === 'recharge' ? 'recharge' : '') + '" id="tn-submit">' + (state.editingId ? '保存修改' : (state.formMode === 'play' ? '记录这场球' : '记录充值')) + '</button>'
+      + (state.editingId ? '<button class="tn-cancel-edit" id="tn-cancel-edit">取消编辑</button>' : '')
+      + '</div></div>';
 
     html += '<div class="tn-section-title">球卡余额</div>';
     html += '<div class="tn-scoreboard"><div class="tn-score-label">球卡余额</div>'
-      + '<div class="tn-score-row"><div class="tn-score-main">' + fmtMoney(spending.remaining) + '</div><div class="tn-score-sub">/ ' + fmtMoney(spending.totalRecharge) + '</div></div>'
+      + '<div class="tn-score-row"><div class="tn-score-main" data-count-to="' + spending.remaining + '" data-prefix="¥">¥0</div><div class="tn-score-sub">/ ' + fmtMoney(spending.totalRecharge) + '</div></div>'
       + '<div class="tn-court-line"><div class="tn-court-line-fill" style="width:' + spending.pct + '%"></div><div class="tn-court-line-ball" style="left:' + spending.pct + '%"></div></div>'
       + '<div class="tn-score-foot"><span>已用 ' + fmtMoney(spending.totalSpent) + '</span><span>距上次打球 ' + (spending.daysSinceLast === null ? '—' : spending.daysSinceLast + ' 天') + '</span></div></div>';
-
-    html += '<div class="tn-section-title">打球数据</div>';
-    html += '<div class="tn-toggle-row" style="margin-bottom:10px;">'
-      + '<button class="tn-toggle-btn ' + (state.playFilter === 'month' ? 'active' : '') + '" data-playfilter="month">本月</button>'
-      + '<button class="tn-toggle-btn ' + (state.playFilter === 'year' ? 'active' : '') + '" data-playfilter="year">本年</button>'
-      + '<button class="tn-toggle-btn ' + (state.playFilter === 'all' ? 'active' : '') + '" data-playfilter="all">全部</button></div>';
-    if (state.playFilter === 'year') {
-      html += '<div style="margin-bottom:10px; display:flex; justify-content:flex-end;"><select id="tn-year-select" class="tn-year-select">'
-        + years.map(y => '<option value="' + y + '" ' + (y === state.summaryYear ? 'selected' : '') + '>' + y + ' 年</option>').join('') + '</select></div>';
-    }
-    html += '<div class="tn-stats">';
-    html += statCard(playStats.sessionCount, '场', filterLabels[state.playFilter] + '总场次');
-    html += statCard(fmtHours(playStats.totalHours), '小时', filterLabels[state.playFilter] + '总时长');
-    html += statCard(fmtHours(playStats.togetherHours), '小时', filterLabels[state.playFilter] + '一起打');
-    html += statCard(fmtMoney(playStats.totalCost), '', filterLabels[state.playFilter] + '总花费');
-    html += statCard(fmtHours(playStats.myHours), '小时', escapeHtml(s.myName) + '时长', 'tn-me', AVATAR_TANG);
-    html += statCard(fmtMoney(playStats.myCost), '', escapeHtml(s.myName) + '花费', 'tn-me', AVATAR_TANG);
-    html += statCard(fmtHours(playStats.friendHours), '小时', escapeHtml(s.friendName) + '时长', 'tn-friend', AVATAR_KE);
-    html += statCard(fmtMoney(playStats.friendCost), '', escapeHtml(s.friendName) + '花费', 'tn-friend', AVATAR_KE);
-    html += '</div>';
-
-    html += '<div class="tn-chart-card"><div class="tn-chart-title-row"><div class="tn-chart-title">近6个月打球时长（小时）</div>'
-      + '<select id="tn-chart-dim-select" class="tn-year-select">'
-      + '<option value="me" ' + (state.chartDimension === 'me' ? 'selected' : '') + '>' + escapeHtml(s.myName) + '</option>'
-      + '<option value="friend" ' + (state.chartDimension === 'friend' ? 'selected' : '') + '>' + escapeHtml(s.friendName) + '</option>'
-      + '<option value="together" ' + (state.chartDimension === 'together' ? 'selected' : '') + '>一起打</option></select></div>';
-    html += '<div class="tn-chart-bars">';
-    months.forEach((m, i) => {
-      const h = (m.hours / maxHours) * 100; const isThisMonth = i === months.length - 1;
-      html += '<div class="tn-bar-col"><div class="tn-bar-count">' + (m.hours > 0 ? fmtHours(m.hours) : '') + '</div>'
-        + '<div class="tn-bar ' + (m.hours > 0 ? 'has-games' : '') + ' ' + (isThisMonth ? 'this-week' : '') + '" style="height:' + (m.hours > 0 ? Math.max(h, 8) : 4) + '%"></div>'
-        + '<div class="tn-bar-label">' + monthLabel(m) + '</div></div>';
-    });
-    html += '</div></div>';
 
     html += '<div class="tn-section-title">记录</div>';
     if (state.transactions.length === 0) {
@@ -407,32 +465,152 @@
       html += '<div class="tn-history">';
       const sorted = [...state.transactions].sort((a, b) => { if (b.date !== a.date) return b.date.localeCompare(a.date); return b.id.localeCompare(a.id); });
       for (const t of sorted) {
+        const editing = state.editingId === t.id ? ' editing' : '';
         if (t.kind === 'recharge') {
-          html += '<div class="tn-history-item"><div class="tn-history-icon recharge">+</div>'
-            + '<div class="tn-history-body"><div class="tn-history-title">球卡充值' + (t.note ? ' · ' + escapeHtml(t.note) : '') + '</div>'
+          const payerLabel = t.payer === 'me' ? s.myName + '出' : (t.payer === 'friend' ? s.friendName + '出' : '各半');
+          html += '<div class="tn-history-item' + editing + '"><div class="tn-history-icon recharge">+</div>'
+            + '<div class="tn-history-body"><div class="tn-history-title">球卡充值 · ' + payerLabel + (t.note ? ' · ' + escapeHtml(t.note) : '') + '</div>'
             + '<div class="tn-history-sub">' + fmtFullDate(t.date) + '</div></div>'
             + '<div class="tn-history-amount recharge">+' + fmtMoney(t.amount) + '</div>'
-            + '<button class="tn-history-del" data-del="' + t.id + '">×</button></div>';
+            + '<div class="tn-history-actions"><button class="tn-history-edit" data-edit="' + t.id + '">✎</button><button class="tn-history-del" data-del="' + t.id + '">×</button></div></div>';
         } else {
           const label = t.playType === 'together' ? '一起打' : (t.playType === 'me' ? s.myName + '自己打' : s.friendName + '自己打');
           const iconClass = t.playType === 'together' ? 'together' : (t.playType === 'me' ? 'me' : 'friend');
           let iconInner;
           if (t.playType === 'together') {
-            iconInner = (AVATAR_KE ? '<img class="tn-pair-avatar a" src="' + AVATAR_KE + '" alt="" />' : '') + (AVATAR_TANG ? '<img class="tn-pair-avatar b" src="' + AVATAR_TANG + '" alt="" />' : '🎾');
-          } else if (t.playType === 'me') { iconInner = AVATAR_TANG ? '<img src="' + AVATAR_TANG + '" alt="" />' : '🎾'; }
+            iconInner = (AVATAR_KE ? '<img class="tn-pair-avatar a" src="' + AVATAR_KE + '" alt="" />' : '') + (AVATAR_TANG ? '<img class="tn-pair-avatar b" src="' + AVATAR_TANG + '" alt="" />' : '');
+            if (!AVATAR_KE && !AVATAR_TANG) iconInner = '🎾';
+            iconInner += '<span class="tn-heart-badge">💗</span>';
+          }
+          else if (t.playType === 'me') { iconInner = AVATAR_TANG ? '<img src="' + AVATAR_TANG + '" alt="" />' : '🎾'; }
           else { iconInner = AVATAR_KE ? '<img src="' + AVATAR_KE + '" alt="" />' : '🎾'; }
-          html += '<div class="tn-history-item"><div class="tn-history-icon ' + iconClass + '">' + iconInner + '</div>'
+          html += '<div class="tn-history-item' + editing + '"><div class="tn-history-icon ' + iconClass + '">' + iconInner + '</div>'
             + '<div class="tn-history-body"><div class="tn-history-title">' + label + (t.note ? ' · ' + escapeHtml(t.note) : '') + '</div>'
             + '<div class="tn-history-sub">' + fmtFullDate(t.date) + (t.rateType ? ' · ' + RATE_LABELS[t.rateType] + ' ' + t.hours + 'h' : '') + '</div></div>'
             + '<div class="tn-history-amount">-' + fmtMoney(t.amount) + '</div>'
-            + '<button class="tn-history-del" data-del="' + t.id + '">×</button></div>';
+            + '<div class="tn-history-actions"><button class="tn-history-edit" data-edit="' + t.id + '">✎</button><button class="tn-history-del" data-del="' + t.id + '">×</button></div></div>';
         }
       }
       html += '</div>';
     }
+    return html;
+  }
 
-    root.innerHTML = html;
-    attachHandlers();
+  function buildLineChart(s) {
+    const months = computeMonthlySeries();
+    const W = 320, H = 150, padL = 8, padR = 8, padT = 16, padB = 22;
+    const n = months.length;
+    const maxV = Math.max(1, ...months.map(m => Math.max(m.me, m.friend, m.together)));
+    const xAt = (i) => padL + (W - padL - padR) * (n === 1 ? 0.5 : i / (n - 1));
+    const yAt = (v) => padT + (H - padT - padB) * (1 - v / maxV);
+
+    const series = [
+      { key: 'me', color: 'var(--tang)', vals: months.map(m => m.me) },
+      { key: 'friend', color: 'var(--clay)', vals: months.map(m => m.friend) },
+      { key: 'together', color: 'var(--heart)', vals: months.map(m => m.together) }
+    ];
+
+    function heartPath(cx, cy, size) {
+      const s2 = size;
+      return 'M ' + cx + ' ' + (cy + s2*0.3)
+        + ' C ' + (cx - s2) + ' ' + (cy - s2*0.6) + ', ' + (cx - s2*0.5) + ' ' + (cy - s2*1.1) + ', ' + cx + ' ' + (cy - s2*0.4)
+        + ' C ' + (cx + s2*0.5) + ' ' + (cy - s2*1.1) + ', ' + (cx + s2) + ' ' + (cy - s2*0.6) + ', ' + cx + ' ' + (cy + s2*0.3) + ' Z';
+    }
+
+    let svg = '<svg class="tn-linechart" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    for (let g = 0; g <= 2; g++) { const gy = padT + (H - padT - padB) * (g / 2); svg += '<line x1="' + padL + '" y1="' + gy + '" x2="' + (W - padR) + '" y2="' + gy + '" stroke="rgba(33,29,26,0.06)" stroke-width="1" />'; }
+    months.forEach((m, i) => { svg += '<text x="' + xAt(i) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="9" fill="var(--ink-soft)" font-family="JetBrains Mono, monospace">' + (m.month + 1) + '月</text>'; });
+
+    series.forEach(se => {
+      const focused = state.focusLine === se.key;
+      const dimmed = state.focusLine && !focused;
+      const cls = 'tn-line-path' + (dimmed ? ' tn-line-dimmed' : '');
+      const sw = focused ? 4 : 3;
+      let d = '';
+      se.vals.forEach((v, i) => { d += (i === 0 ? 'M ' : ' L ') + xAt(i) + ' ' + yAt(v); });
+      svg += '<path class="' + cls + '" d="' + d + '" stroke="' + se.color + '" style="stroke-width:' + sw + '" />';
+      se.vals.forEach((v, i) => {
+        const showDot = !state.focusLine || focused;
+        const dotCls = 'tn-line-dot' + (dimmed ? ' tn-line-dimmed' : '');
+        if (se.key === 'together') {
+          svg += '<path class="' + dotCls + '" d="' + heartPath(xAt(i), yAt(v), 4) + '" fill="' + se.color + '" style="opacity:' + (showDot ? 1 : 0.15) + '" />';
+        } else {
+          svg += '<circle class="' + dotCls + '" cx="' + xAt(i) + '" cy="' + yAt(v) + '" r="' + (showDot ? 3.2 : 0) + '" fill="' + se.color + '" />';
+        }
+        // 只有聚焦这条线时才显示数值标签
+        if (focused) {
+          const ty = yAt(v) - 8;
+          svg += '<text class="tn-line-value" x="' + xAt(i) + '" y="' + ty + '" text-anchor="middle" fill="' + se.color + '">' + fmtHours(v) + '</text>';
+        }
+      });
+    });
+    svg += '</svg>';
+
+    const legItem = (key, color, label, heart) => {
+      const focused = state.focusLine === key ? ' focused' : '';
+      const faded = (state.focusLine && state.focusLine !== key) ? ' faded' : '';
+      const dot = heart ? '<span style="color:' + color + ';font-size:12px;line-height:1;">♥</span>' : '<span class="tn-legend-dot" style="background:' + color + '"></span>';
+      return '<div class="tn-legend-item' + focused + faded + '" data-focus="' + key + '">' + dot + label + '</div>';
+    };
+    let legend = '<div class="tn-legend">'
+      + legItem('me', 'var(--tang)', escapeHtml(s.myName), false)
+      + legItem('friend', 'var(--clay)', escapeHtml(s.friendName), false)
+      + legItem('together', 'var(--heart)', '一起打', true)
+      + '</div>';
+
+    return svg + legend;
+  }
+
+  function renderDashboard(s) {
+    const playStats = computePlayStats();
+    const settle = computeSettlement();
+    const years = getAvailableYears();
+    const availMonths = getAvailableMonths();
+    let html = '';
+
+    html += '<div class="tn-section-title">打球时长</div>';
+    html += '<div class="tn-toggle-row" style="margin-bottom:10px;">'
+      + '<button class="tn-toggle-btn ' + (state.playFilter === 'month' ? 'active' : '') + '" data-playfilter="month">月份</button>'
+      + '<button class="tn-toggle-btn ' + (state.playFilter === 'year' ? 'active' : '') + '" data-playfilter="year">本年</button>'
+      + '<button class="tn-toggle-btn ' + (state.playFilter === 'all' ? 'active' : '') + '" data-playfilter="all">全部</button></div>';
+    if (state.playFilter === 'month') {
+      html += '<div style="margin-bottom:12px; display:flex; justify-content:flex-end;"><select id="tn-month-select" class="tn-month-select">'
+        + availMonths.map(m => { const [y, mo] = m.split('-'); return '<option value="' + m + '" ' + (m === state.filterMonth ? 'selected' : '') + '>' + y + '年' + parseInt(mo,10) + '月</option>'; }).join('') + '</select></div>';
+    } else if (state.playFilter === 'year') {
+      html += '<div style="margin-bottom:12px; display:flex; justify-content:flex-end;"><select id="tn-year-select" class="tn-year-select">'
+        + years.map(y => '<option value="' + y + '" ' + (y === state.summaryYear ? 'selected' : '') + '>' + y + '年</option>').join('') + '</select></div>';
+    }
+
+    html += '<div class="tn-stats">';
+    html += statCard(fmtHours(playStats.myHours), '小时', escapeHtml(s.myName) + '时长', 'tn-me', AVATAR_TANG);
+    html += statCard(fmtHours(playStats.friendHours), '小时', escapeHtml(s.friendName) + '时长', 'tn-friend', AVATAR_KE);
+    html += statCard(fmtHours(playStats.togetherHours), '小时', '一起打 ♥', 'tn-together');
+    html += '</div>';
+
+    html += '<div class="tn-stats-secondary">';
+    html += statCard(fmtMoney(playStats.myCost), '', escapeHtml(s.myName) + '花费', 'secondary');
+    html += statCard(fmtMoney(playStats.friendCost), '', escapeHtml(s.friendName) + '花费', 'secondary');
+    html += statCard(fmtMoney(playStats.totalCost), '', '总花费', 'secondary');
+    html += '</div>';
+
+    html += '<div class="tn-chart-card"><div class="tn-chart-title">近6个月打球时长趋势（小时）· 点图例可聚焦看数值</div>';
+    html += buildLineChart(s);
+    html += '</div>';
+
+    html += '<div class="tn-section-title">分账结算</div>';
+    html += '<div class="tn-settle-card">'
+      + '<div class="tn-settle-row"><span class="tn-settle-name">' + escapeHtml(s.myName) + ' 投入 / 消耗</span><span class="tn-settle-val">' + fmtMoney(settle.myPaid) + ' / ' + fmtMoney(settle.myUsed) + '</span></div>'
+      + '<div class="tn-settle-row"><span class="tn-settle-name">' + escapeHtml(s.friendName) + ' 投入 / 消耗</span><span class="tn-settle-val">' + fmtMoney(settle.friendPaid) + ' / ' + fmtMoney(settle.friendUsed) + '</span></div>';
+    const diff = Math.round((settle.myNet - settle.friendNet) / 2 * 100) / 100;
+    let resultText;
+    if (Math.abs(diff) < 0.01) resultText = '两人已平账，谁也不欠谁 🎉';
+    else if (diff > 0) resultText = escapeHtml(s.friendName) + ' 应补给 ' + escapeHtml(s.myName) + ' ' + fmtMoney(diff);
+    else resultText = escapeHtml(s.myName) + ' 应补给 ' + escapeHtml(s.friendName) + ' ' + fmtMoney(Math.abs(diff));
+    html += '<div class="tn-settle-result">' + resultText + '</div>';
+    html += '<div style="font-size:11px;color:var(--ink-soft);margin-top:10px;line-height:1.5;">投入=各自充值（含初始金额各半）；消耗=自己打的全算自己、一起打的各算一半。差额取一半即为应补金额。</div>';
+    html += '</div>';
+
+    return html;
   }
 
   function statCard(num, unit, label, extraClass, avatar) {
@@ -440,10 +618,6 @@
       + (avatar ? '<img class="tn-stat-avatar" src="' + avatar + '" alt="" />' : '')
       + '<div class="tn-stat-num">' + num + (unit ? '<span class="unit">' + unit + '</span>' : '') + '</div>'
       + '<div class="tn-stat-label">' + label + '</div></div>';
-  }
-
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
   function attachHandlers() {
@@ -458,20 +632,33 @@
     };
     const setCancel = document.getElementById('tn-settings-cancel');
     if (setCancel) setCancel.onclick = () => { state.showSettings = false; render(); };
-    document.querySelectorAll('[data-playfilter]').forEach(btn => { btn.onclick = () => { syncFormInputs(); state.playFilter = btn.getAttribute('data-playfilter'); render(); }; });
+
+    document.querySelectorAll('[data-tab]').forEach(btn => { btn.onclick = () => { syncFormInputs(); state.activeTab = btn.getAttribute('data-tab'); render(); }; });
+    document.querySelectorAll('[data-playfilter]').forEach(btn => { btn.onclick = () => { state.playFilter = btn.getAttribute('data-playfilter'); render(); }; });
+    const monthSelect = document.getElementById('tn-month-select');
+    if (monthSelect) monthSelect.onchange = (e) => { state.filterMonth = e.target.value; render(); };
     const yearSelect = document.getElementById('tn-year-select');
-    if (yearSelect) yearSelect.onchange = (e) => { syncFormInputs(); state.summaryYear = parseInt(e.target.value, 10); render(); };
-    const chartDimSelect = document.getElementById('tn-chart-dim-select');
-    if (chartDimSelect) chartDimSelect.onchange = (e) => { syncFormInputs(); state.chartDimension = e.target.value; render(); };
+    if (yearSelect) yearSelect.onchange = (e) => { state.summaryYear = parseInt(e.target.value, 10); render(); };
+
+    document.querySelectorAll('[data-focus]').forEach(el => { el.onclick = () => { const k = el.getAttribute('data-focus'); state.focusLine = (state.focusLine === k) ? null : k; render(); }; });
+
     const modePlay = document.getElementById('tn-mode-play');
-    if (modePlay) modePlay.onclick = () => { state.formMode = 'play'; syncFormInputs(); render(); };
+    if (modePlay) modePlay.onclick = () => { syncFormInputs(); state.formMode = 'play'; render(); };
     const modeRecharge = document.getElementById('tn-mode-recharge');
-    if (modeRecharge) modeRecharge.onclick = () => { state.formMode = 'recharge'; syncFormInputs(); render(); };
+    if (modeRecharge) modeRecharge.onclick = () => { syncFormInputs(); state.formMode = 'recharge'; render(); };
+
     document.querySelectorAll('[data-playtype]').forEach(btn => { btn.onclick = () => { syncFormInputs(); state.playType = btn.getAttribute('data-playtype'); render(); }; });
     document.querySelectorAll('[data-ratetype]').forEach(btn => { btn.onclick = () => { syncFormInputs(); state.rateType = btn.getAttribute('data-ratetype'); render(); }; });
+    document.querySelectorAll('[data-payer]').forEach(btn => { btn.onclick = () => { syncFormInputs(); state.payer = btn.getAttribute('data-payer'); render(); }; });
+
     const submitBtn = document.getElementById('tn-submit');
-    if (submitBtn) submitBtn.onclick = () => { syncFormInputs(); addTransaction(); };
+    if (submitBtn) submitBtn.onclick = () => { syncFormInputs(); submitForm(); };
+    const cancelEdit = document.getElementById('tn-cancel-edit');
+    if (cancelEdit) cancelEdit.onclick = () => { resetForm(); render(); };
+
+    document.querySelectorAll('[data-edit]').forEach(btn => { btn.onclick = () => startEdit(btn.getAttribute('data-edit')); });
     document.querySelectorAll('[data-del]').forEach(btn => { btn.onclick = () => deleteTransaction(btn.getAttribute('data-del')); });
+
     const dateInput = document.getElementById('tn-form-date');
     if (dateInput) dateInput.oninput = (e) => { state.formDate = e.target.value; };
     const amountInput = document.getElementById('tn-form-amount');
@@ -503,4 +690,3 @@
 
 </body>
 </html>
-
