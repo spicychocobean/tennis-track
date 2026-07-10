@@ -14,13 +14,13 @@
 <div id="tennis-app"></div>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Gaegu:wght@400;700&display=swap');
 
   #tennis-app {
     --clay: #BD5D31; --clay-deep: #A14E27; --court: #1F4035; --court-light: #2E5949;
     --chalk: #F7F3E8; --chalk-dim: #EDE7D8; --ball: #CFE05B; --ink: #211D1A;
     --ink-soft: #6B6258; --line: rgba(33,29,26,0.10);
-    --heart: #D96A8B; --tang: #17A398;
+    --heart: #D96A8B; --tang: #17A398; --pink: #E89BB4;
     --shadow-sm: 0 1px 3px rgba(33,29,26,0.06), 0 1px 2px rgba(33,29,26,0.04);
     --shadow-md: 0 4px 12px rgba(33,29,26,0.08), 0 2px 4px rgba(33,29,26,0.04);
     --shadow-lg: 0 10px 30px rgba(31,64,53,0.18);
@@ -30,7 +30,7 @@
   #tennis-app * { box-sizing: border-box; }
   .tn-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .tn-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--court); margin: 0; display: flex; align-items: center; gap: 10px; }
-  .tn-title-ball { width: 26px; height: 26px; flex-shrink: 0; }
+  .tn-title-ball { width: 34px; height: 34px; flex-shrink: 0; }
   .tn-title span { color: var(--clay); }
   .tn-settings-btn { background: none; border: 1.5px solid var(--line); border-radius: 8px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; color: var(--ink-soft); transition: all 0.15s ease; }
   .tn-settings-btn:hover { border-color: var(--clay); color: var(--clay); }
@@ -105,7 +105,7 @@
   .tn-cancel-edit { width: 100%; border: 1.5px solid var(--line); background: var(--chalk); padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; margin-top: 8px; transition: all 0.15s ease; }
   .tn-cancel-edit:active { transform: scale(0.98); }
 
-  .tn-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); }
+  .tn-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
   .tn-linechart { width: 100%; height: auto; display: block; overflow: visible; }
   .tn-line-path { fill: none; stroke-width: 3; transition: opacity 0.25s ease, stroke-width 0.25s ease; }
   .tn-line-dot { transition: opacity 0.25s ease, r 0.25s ease; }
@@ -117,6 +117,14 @@
   .tn-legend-item.focused { border-color: var(--ink); box-shadow: var(--shadow-sm); }
   .tn-legend-item.faded { opacity: 0.4; }
   .tn-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  .tn-donut-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center; }
+  .tn-donut { flex-shrink: 0; }
+  .tn-donut-center-num { font-family: 'Oswald', sans-serif; font-weight: 700; }
+  .tn-donut-legend { display: flex; flex-direction: column; gap: 8px; }
+  .tn-donut-leg-item { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink); }
+  .tn-donut-leg-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+  .tn-donut-leg-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; margin-left: auto; padding-left: 10px; }
 
   .tn-settle-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
   .tn-settle-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; }
@@ -144,7 +152,13 @@
   .tn-history-edit:active, .tn-history-del:active { transform: scale(0.9); }
   .tn-history-item.editing { border-color: var(--court); box-shadow: 0 0 0 2px rgba(31,64,53,0.12); }
 
-  .tn-empty { text-align: center; color: var(--ink-soft); font-size: 13px; padding: 24px 0; }
+  /* 可爱空状态 */
+  .tn-empty { position: relative; text-align: center; padding: 30px 10px 34px; min-height: 150px; }
+  .tn-empty-scatter { position: absolute; inset: 0; pointer-events: none; }
+  .tn-empty-word { position: absolute; font-family: 'Gaegu', cursive; color: rgba(107,98,88,0.35); font-size: 15px; font-weight: 700; }
+  .tn-empty-center { position: relative; z-index: 2; display: inline-flex; flex-direction: column; align-items: center; gap: 8px; }
+  .tn-empty-text { font-family: 'Gaegu', cursive; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+
   .tn-settings-panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-md); }
   .tn-settings-panel .tn-field-row:last-child { margin-bottom: 0; }
   .tn-settings-close { width: 100%; border: 1.5px solid var(--line); background: var(--chalk); padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; margin-top: 4px; }
@@ -189,8 +203,28 @@
   function uid() { return 't' + Date.now() + Math.random().toString(36).slice(2,7); }
   const RATES = { off: 425, peak: 467.5 };
   const RATE_LABELS = { off: '闲时', peak: '忙时' };
-  const AVATAR_TANG = './tang.jpg';
-  const AVATAR_KE = './ke.jpg';
+  const AVATAR_TANG = './tang.png';
+  const AVATAR_KE = './ke.png';
+
+  // 手绘风网球小人（戴粉色贝雷帽）
+  function ballMascot(size) {
+    const w = size || 34;
+    return '<svg class="tn-title-ball" width="' + w + '" height="' + w + '" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">'
+      + '<ellipse cx="20" cy="36" rx="9" ry="1.6" fill="rgba(33,29,26,0.08)"/>'
+      + '<circle cx="20" cy="20" r="13" fill="var(--ball)" stroke="var(--court)" stroke-width="1.3"/>'
+      + '<path d="M10 13 C 15 18, 15 22, 10 27" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'
+      + '<path d="M30 13 C 25 18, 25 22, 30 27" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'
+      + '<circle cx="16" cy="20" r="1.4" fill="var(--court)"/>'
+      + '<circle cx="24" cy="20" r="1.4" fill="var(--court)"/>'
+      + '<path d="M16.5 24 Q 20 27, 23.5 24" fill="none" stroke="var(--court)" stroke-width="1.3" stroke-linecap="round"/>'
+      + '<path d="M8 22 Q 4 24, 5 28" fill="none" stroke="var(--court)" stroke-width="1.3" stroke-linecap="round"/>'
+      + '<path d="M32 22 Q 36 24, 35 28" fill="none" stroke="var(--court)" stroke-width="1.3" stroke-linecap="round"/>'
+      + '<path d="M16 32 Q 15 36, 17 37" fill="none" stroke="var(--court)" stroke-width="1.3" stroke-linecap="round"/>'
+      + '<path d="M24 32 Q 25 36, 23 37" fill="none" stroke="var(--court)" stroke-width="1.3" stroke-linecap="round"/>'
+      + '<path d="M12 10 Q 20 3, 28 10 Q 24 8, 20 8 Q 16 8, 12 10 Z" fill="var(--pink)" stroke="#C97A94" stroke-width="0.8"/>'
+      + '<circle cx="20" cy="6.5" r="1.5" fill="#C97A94"/>'
+      + '</svg>';
+  }
 
   function rowToTx(r) {
     return { id: r.id, kind: r.kind, date: r.date, amount: Number(r.amount), note: r.note || '',
@@ -267,6 +301,19 @@
     if (state.playFilter === 'month') return t.date.slice(0,7) === state.filterMonth;
     if (state.playFilter === 'year') return new Date(t.date + 'T00:00:00').getFullYear() === state.summaryYear;
     return true;
+  }
+
+  function computeBreakdown() {
+    let soloMe = 0, soloFriend = 0, together = 0;
+    for (const t of state.transactions) {
+      if (t.kind !== 'play') continue;
+      if (!inFilter(t)) continue;
+      const hours = Number(t.hours) || 0;
+      if (t.playType === 'together') together += hours;
+      else if (t.playType === 'me') soloMe += hours;
+      else if (t.playType === 'friend') soloFriend += hours;
+    }
+    return { soloMe, soloFriend, together };
   }
 
   function computePlayStats() {
@@ -386,12 +433,7 @@
     const s = state.settings;
     let html = '';
 
-    html += '<div class="tn-header"><h1 class="tn-title">'
-      + '<svg class="tn-title-ball" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">'
-      + '<circle cx="16" cy="16" r="15" fill="var(--ball)" stroke="var(--ink)" stroke-width="1"/>'
-      + '<path d="M16 1 C 8 7, 8 25, 16 31" fill="none" stroke="var(--ink)" stroke-width="1.5"/>'
-      + '<path d="M16 1 C 24 7, 24 25, 16 31" fill="none" stroke="var(--ink)" stroke-width="1.5"/>'
-      + '</svg>网球<span>记录</span>本</h1>'
+    html += '<div class="tn-header"><h1 class="tn-title">' + ballMascot(34) + '网球<span>记录</span>本</h1>'
       + '<button class="tn-settings-btn" id="tn-settings-btn">⚙</button></div>';
 
     html += '<div class="tn-tabs">'
@@ -460,7 +502,12 @@
 
     html += '<div class="tn-section-title">记录</div>';
     if (state.transactions.length === 0) {
-      html += '<div class="tn-empty">还没有记录，记一笔开始追踪吧 🎾</div>';
+      html += '<div class="tn-empty"><div class="tn-empty-scatter">'
+        + '<span class="tn-empty-word" style="top:8%; left:10%; transform:rotate(-8deg);">tennis!</span>'
+        + '<span class="tn-empty-word" style="top:20%; right:12%; transform:rotate(6deg);">tennis!</span>'
+        + '<span class="tn-empty-word" style="bottom:24%; left:14%; transform:rotate(4deg);">tennis!</span>'
+        + '<span class="tn-empty-word" style="bottom:10%; right:16%; transform:rotate(-6deg);">tennis!</span>'
+        + '</div><div class="tn-empty-center">' + ballMascot(56) + '<div class="tn-empty-text">还没有记录，记一笔开始追踪吧～</div></div></div>';
     } else {
       html += '<div class="tn-history">';
       const sorted = [...state.transactions].sort((a, b) => { if (b.date !== a.date) return b.date.localeCompare(a.date); return b.id.localeCompare(a.id); });
@@ -537,7 +584,6 @@
         } else {
           svg += '<circle class="' + dotCls + '" cx="' + xAt(i) + '" cy="' + yAt(v) + '" r="' + (showDot ? 3.2 : 0) + '" fill="' + se.color + '" />';
         }
-        // 只有聚焦这条线时才显示数值标签
         if (focused) {
           const ty = yAt(v) - 8;
           svg += '<text class="tn-line-value" x="' + xAt(i) + '" y="' + ty + '" text-anchor="middle" fill="' + se.color + '">' + fmtHours(v) + '</text>';
@@ -559,6 +605,43 @@
       + '</div>';
 
     return svg + legend;
+  }
+
+  function buildDonut(s) {
+    const bd = computeBreakdown();
+    const total = bd.soloMe + bd.soloFriend + bd.together;
+    const segs = [
+      { label: escapeHtml(s.myName) + '自己', val: bd.soloMe, color: '#17A398' },
+      { label: escapeHtml(s.friendName) + '自己', val: bd.soloFriend, color: '#BD5D31' },
+      { label: '一起打', val: bd.together, color: '#D96A8B' }
+    ];
+    const R = 52, cx = 62, cy = 62, sw = 20, C = 2 * Math.PI * R;
+    let svg = '<svg class="tn-donut" width="124" height="124" viewBox="0 0 124 124">';
+    svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="none" stroke="var(--chalk-dim)" stroke-width="' + sw + '" />';
+    if (total > 0) {
+      let offset = 0;
+      segs.forEach(seg => {
+        if (seg.val <= 0) return;
+        const frac = seg.val / total; const len = frac * C;
+        svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="none" stroke="' + seg.color + '" stroke-width="' + sw + '"'
+          + ' stroke-dasharray="' + len + ' ' + (C - len) + '" stroke-dashoffset="' + (-offset) + '"'
+          + ' transform="rotate(-90 ' + cx + ' ' + cy + ')" stroke-linecap="butt" />';
+        offset += len;
+      });
+    }
+    svg += '<text class="tn-donut-center-num" x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" font-size="20" fill="var(--ink)">' + fmtHours(total) + '</text>';
+    svg += '<text x="' + cx + '" y="' + (cy + 15) + '" text-anchor="middle" font-size="9" fill="var(--ink-soft)">总小时</text>';
+    svg += '</svg>';
+
+    let legend = '<div class="tn-donut-legend">';
+    segs.forEach(seg => {
+      const pct = total > 0 ? Math.round(seg.val / total * 100) : 0;
+      legend += '<div class="tn-donut-leg-item"><span class="tn-donut-leg-dot" style="background:' + seg.color + '"></span>' + seg.label
+        + '<span class="tn-donut-leg-val">' + fmtHours(seg.val) + 'h · ' + pct + '%</span></div>';
+    });
+    legend += '</div>';
+
+    return '<div class="tn-donut-wrap">' + svg + legend + '</div>';
   }
 
   function renderDashboard(s) {
@@ -593,9 +676,16 @@
     html += statCard(fmtMoney(playStats.totalCost), '', '总花费', 'secondary');
     html += '</div>';
 
-    html += '<div class="tn-chart-card"><div class="tn-chart-title">近6个月打球时长趋势（小时）· 点图例可聚焦看数值</div>';
-    html += buildLineChart(s);
-    html += '</div>';
+    // 图表：月份=趋势折线；本年/全部=占比环形，各留一张
+    if (state.playFilter === 'month') {
+      html += '<div class="tn-chart-card"><div class="tn-chart-title">近6个月打球时长趋势（小时）· 详细数字请点击名字查看</div>';
+      html += buildLineChart(s);
+      html += '</div>';
+    } else {
+      html += '<div class="tn-chart-card"><div class="tn-chart-title">时长构成占比（' + (state.playFilter === 'year' ? state.summaryYear + '年' : '全部') + '）</div>';
+      html += buildDonut(s);
+      html += '</div>';
+    }
 
     html += '<div class="tn-section-title">分账结算</div>';
     html += '<div class="tn-settle-card">'
