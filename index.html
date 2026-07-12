@@ -50,7 +50,7 @@
 
   /* banner 背景板 */
   .tn-hero { position: relative; margin: -18px -18px 12px; height: 170px; border-radius: 20px 20px 0 0; overflow: hidden; }
-  .tn-hero-bg { position: absolute; inset: 0; background: url('banner.jpg') center/cover no-repeat; }
+  .tn-hero-bg { position: absolute; inset: 0; background: url('banner.webp') center/cover no-repeat; }
   .tn-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(33,29,26,0.40) 0%, rgba(33,29,26,0.10) 38%, rgba(33,29,26,0.26) 72%, rgba(33,29,26,0) 100%); }
   .tn-hero-content { position: relative; z-index: 2; padding: 18px; display: flex; align-items: flex-start; justify-content: space-between; }
   .tn-hero-content .tn-title-wrap { display: flex; flex-direction: column; }
@@ -218,7 +218,7 @@
   .tn-chip .tn-chip-ico { font-size: 14px; }
 
   /* 欢迎页 */
-  .tn-welcome { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(rgba(33,29,26,0.22), rgba(33,29,26,0.42)), url('welcome.jpg') center/cover no-repeat; }
+  .tn-welcome { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(rgba(33,29,26,0.22), rgba(33,29,26,0.42)), url('welcome.webp') center/cover no-repeat; }
   .tn-welcome-card { background: rgba(255,255,255,0.93); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 26px; padding: 38px 32px; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.28); max-width: 340px; width: 100%; animation: tnSlideUp .35s ease; }
   .tn-welcome-title { font-family: 'Baloo 2', sans-serif; font-size: 40px; font-weight: 800; color: var(--court); line-height: 1; }
   .tn-welcome-sub { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--clay); letter-spacing: 2.5px; text-transform: lowercase; margin-top: 8px; }
@@ -281,10 +281,12 @@
   .tn-hit .tn-ball, .tn-hit .tn-trail, .tn-hit .tn-spark { transform-box: fill-box; }
   .tn-hit .tn-ball { transform-origin: center; }
   .tn-hit .tn-spark { transform-origin: center; }
-  .tn-cal-cell:hover .tn-racket-swing { animation: tnSwing 1.15s cubic-bezier(.34,1.15,.5,1); }
-  .tn-cal-cell:hover .tn-hit .tn-ball { animation: tnBall 1.15s ease-out; }
-  .tn-cal-cell:hover .tn-hit .tn-trail { animation: tnTrail 1.15s ease-out; }
-  .tn-cal-cell:hover .tn-hit .tn-spark { animation: tnSpark 1.15s ease-out; }
+  @media (hover: hover) and (pointer: fine) {
+    .tn-cal-cell:hover .tn-racket-swing { animation: tnSwing 1.15s cubic-bezier(.34,1.15,.5,1); }
+    .tn-cal-cell:hover .tn-hit .tn-ball { animation: tnBall 1.15s ease-out; }
+    .tn-cal-cell:hover .tn-hit .tn-trail { animation: tnTrail 1.15s ease-out; }
+    .tn-cal-cell:hover .tn-hit .tn-spark { animation: tnSpark 1.15s ease-out; }
+  }
   @keyframes tnSwing {
     0%   { transform: rotate(-13deg); }
     30%  { transform: rotate(23deg); }
@@ -340,6 +342,7 @@
 
   @media (max-width: 600px) {
     #tennis-app { padding: 12px; border-radius: 0; }
+    .tn-modal-overlay { backdrop-filter: none; -webkit-backdrop-filter: none; }
     .tn-score-main { font-size: 36px; }
     .tn-title { font-size: 26px; }
     .tn-subtitle { font-size: 11px; }
@@ -632,6 +635,13 @@
     return true;
   }
 
+  function txMatchesFilter(t) {
+    const f = state.calFilter;
+    if (!f || f === 'all') return true;
+    if (t.kind !== 'play') return false;
+    return t.playType === f;
+  }
+
   function resetForm() {
     state.editingId = null; state.formMode = 'play'; state.playType = 'together'; state.rateType = 'off';
     state.hours = 1; state.payer = 'split'; state.formDate = new Date().toISOString().slice(0,10);
@@ -900,9 +910,10 @@
         + '<span class="tn-cal-leg"><span class="tn-cal-leg-kind">' + coinIcon(14) + '</span>充值</span>'
       + '</div></div>';
 
-    const monthPlays = state.transactions.filter(t => t.kind === 'play' && t.date.slice(0,7) === monthKey).length;
+    const monthPlays = state.transactions.filter(t => t.kind === 'play' && t.date.slice(0,7) === monthKey && txMatchesFilter(t)).length;
+    const calFilterLabel = { me: s.myName, friend: s.friendName, together: '一起' }[state.calFilter];
     html += '<div class="tn-streak-bar">'
-      + '<span class="tn-chip"><span class="tn-chip-ico">🎾</span>本月已打 <b>' + monthPlays + '</b> 次</span></div>';
+      + '<span class="tn-chip"><span class="tn-chip-ico">🎾</span>本月已打 <b>' + monthPlays + '</b> 次' + (calFilterLabel ? ' · ' + calFilterLabel : '') + '</span></div>';
 
     const dows = ['日','一','二','三','四','五','六'];
     html += '<div class="tn-cal-grid">';
