@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>网球记录本</title>
+  <title>Net Worth · our tennis diary</title>
   <style>
-    html, body { margin: 0; padding: 0; background: #F7F3E8; -webkit-text-size-adjust: 100%; }
+    html, body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 560px at 50% -10%, rgba(46,89,73,0.10), transparent 60%),
+        radial-gradient(900px 420px at 100% 15%, rgba(232,155,180,0.12), transparent 52%),
+        linear-gradient(180deg, #FBF8F5 0%, #F6F0EC 100%);
+      background-attachment: fixed;
+    }
     * { box-sizing: border-box; }
   </style>
 </head>
@@ -14,34 +22,57 @@
 <div id="tennis-app"></div>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Gaegu:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Gaegu:wght@400;700&display=swap');
 
   #tennis-app {
     --clay: #BD5D31; --clay-deep: #A14E27; --court: #1F4035; --court-light: #2E5949;
-    --chalk: #F7F3E8; --chalk-dim: #EDE7D8; --ball: #CFE05B; --ink: #211D1A;
-    --ink-soft: #6B6258; --line: rgba(33,29,26,0.10);
-    --heart: #D96A8B; --tang: #17A398; --pink: #E89BB4;
+    --chalk: #F9F5F3; --chalk-dim: #F2ECEA; --ball: #CFE05B; --ink: #211D1A;
+    --ink-soft: #6B6258; --line: rgba(33,29,26,0.08);
+    --heart: #D96A8B; --tang: #17A398; --pink: #E89BB4; --card: #FFFDFB;
     --shadow-sm: 0 1px 3px rgba(33,29,26,0.06), 0 1px 2px rgba(33,29,26,0.04);
     --shadow-md: 0 4px 12px rgba(33,29,26,0.08), 0 2px 4px rgba(33,29,26,0.04);
     --shadow-lg: 0 10px 30px rgba(31,64,53,0.18);
-    font-family: 'Inter', sans-serif; color: var(--ink); background: var(--chalk);
-    border-radius: 18px; padding: 16px; max-width: 720px; width: 100%; margin: 0 auto; box-sizing: border-box;
+    font-family: 'Inter', sans-serif; color: var(--ink); background: var(--card);
+    border-radius: 20px; padding: 18px; max-width: 720px; width: 100%; margin: 0 auto; box-sizing: border-box;
+    overflow: hidden;
   }
   #tennis-app * { box-sizing: border-box; }
-  .tn-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .tn-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--court); margin: 0; display: flex; align-items: center; gap: 10px; }
-  .tn-title-ball { width: 34px; height: 34px; flex-shrink: 0; }
+  .tn-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 4px 2px; }
+  .tn-title-wrap { display: flex; flex-direction: column; }
+  .tn-title { font-family: 'Baloo 2', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -0.5px; color: var(--court); margin: 0; line-height: 1; }
   .tn-title span { color: var(--clay); }
-  .tn-settings-btn { background: none; border: 1.5px solid var(--line); border-radius: 8px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; color: var(--ink-soft); transition: all 0.15s ease; }
+  .tn-subtitle { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--clay); letter-spacing: 2px; text-transform: lowercase; margin: 5px 0 0; }
+  .tn-title-ball { width: 34px; height: 34px; flex-shrink: 0; }
+  .tn-settings-btn { background: none; border: 1.5px solid var(--line); border-radius: 10px; width: 38px; height: 38px; font-size: 16px; cursor: pointer; color: var(--ink-soft); transition: all 0.15s ease; }
   .tn-settings-btn:hover { border-color: var(--clay); color: var(--clay); }
   .tn-settings-btn:active { transform: scale(0.92); }
+  .tn-settings-btn.active { border-color: #fff; background: rgba(255,255,255,0.30); color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.25); }
 
-  .tn-tabs { display: flex; gap: 6px; background: var(--chalk-dim); border-radius: 12px; padding: 4px; margin-bottom: 18px; box-shadow: inset 0 1px 2px rgba(33,29,26,0.05); }
-  .tn-tab { flex: 1; border: none; background: transparent; padding: 11px 4px; border-radius: 9px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--ink-soft); cursor: pointer; transition: all 0.2s ease; }
+  /* banner 背景板 */
+  .tn-hero { position: relative; margin: -18px -18px 12px; height: 170px; border-radius: 20px 20px 0 0; overflow: hidden; }
+  .tn-hero-bg { position: absolute; inset: 0; background: url('banner.jpg') center/cover no-repeat; }
+  .tn-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(33,29,26,0.40) 0%, rgba(33,29,26,0.10) 38%, rgba(33,29,26,0.26) 72%, rgba(33,29,26,0) 100%); }
+  .tn-hero-content { position: relative; z-index: 2; padding: 18px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .tn-hero-content .tn-title-wrap { display: flex; flex-direction: column; }
+  .tn-hero-content .tn-title { font-family: 'Baloo 2', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -0.5px; color: #fff; margin: 0; line-height: 1; text-shadow: 0 2px 8px rgba(33,29,26,0.35); }
+  .tn-hero-content .tn-subtitle { font-family: 'Inter', sans-serif; font-size: 12px; color: rgba(255,255,255,0.88); letter-spacing: 2px; text-transform: lowercase; margin: 6px 0 0; text-shadow: 0 1px 4px rgba(33,29,26,0.35); }
+  .tn-hero-content .tn-settings-btn { border-color: rgba(255,255,255,0.55); color: #fff; background: rgba(255,255,255,0.12); }
+  .tn-hero-content .tn-settings-btn:hover { border-color: #fff; background: rgba(255,255,255,0.22); }
+  .tn-hero-divider { display: flex; align-items: center; gap: 9px; margin: 0 6px 16px; padding: 0 4px; }
+  .tn-hero-divider::before, .tn-hero-divider::after { content: ''; flex: 1; height: 2px; border-radius: 2px; }
+  .tn-hero-divider::before { background: linear-gradient(90deg, rgba(31,64,53,0), var(--court)); }
+  .tn-hero-divider::after { background: linear-gradient(90deg, var(--ball), rgba(31,64,53,0)); }
+  .tn-hero-divider .hd-dot { width: 7px; height: 7px; border-radius: 50%; box-shadow: 0 1px 2px rgba(33,29,26,0.18); }
+  .tn-hero-divider .hd-dot.c { background: var(--court); }
+  .tn-hero-divider .hd-dot.b { background: var(--ball); }
+  .tn-hero-divider .hd-dot.k { background: var(--clay); }
+
+  .tn-tabs { display: flex; gap: 6px; background: var(--chalk-dim); border-radius: 14px; padding: 4px; margin-bottom: 18px; box-shadow: inset 0 1px 2px rgba(33,29,26,0.05); }
+  .tn-tab { flex: 1; border: none; background: transparent; padding: 11px 4px; border-radius: 12px; font-family: 'Baloo 2', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--ink-soft); cursor: pointer; transition: all 0.2s ease; }
   .tn-tab.active { background: var(--court); color: var(--chalk); box-shadow: var(--shadow-sm); }
   .tn-tab:active { transform: scale(0.97); }
 
-  .tn-scoreboard { background: var(--court); border-radius: 14px; padding: 22px 24px; color: var(--chalk); margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: var(--shadow-lg); }
+  .tn-scoreboard { background: var(--court); border-radius: 18px; padding: 22px 24px; color: var(--chalk); margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: var(--shadow-lg); }
   .tn-scoreboard::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 6px; background: repeating-linear-gradient(to bottom, var(--ball) 0 10px, transparent 10px 20px); opacity: 0.6; }
   .tn-score-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ball); font-weight: 600; margin: 0 0 6px 0; }
   .tn-score-row { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
@@ -55,57 +86,67 @@
 
   .tn-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
   .tn-stats-secondary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-  .tn-stat-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; position: relative; box-shadow: var(--shadow-sm); transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .tn-stat-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; position: relative; box-shadow: var(--shadow-sm); transition: transform 0.18s ease, box-shadow 0.18s ease; }
   .tn-stat-card:not(.secondary):hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
   .tn-stat-card.secondary { background: transparent; border: 1px dashed var(--line); box-shadow: none; }
-  .tn-stat-num { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.1; }
+  .tn-stat-num { font-family: 'Baloo 2', sans-serif; font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1.1; }
   .tn-stat-num .unit { font-size: 12px; color: var(--ink-soft); font-family: 'Inter', sans-serif; font-weight: 500; margin-left: 2px; }
   .tn-stat-label { font-size: 11px; color: var(--ink-soft); margin-top: 4px; letter-spacing: 0.3px; display: flex; align-items: center; gap: 3px; }
   .tn-stat-card.tn-me .tn-stat-num { color: var(--tang); }
   .tn-stat-card.tn-friend .tn-stat-num { color: var(--clay); }
   .tn-stat-card.tn-together .tn-stat-num { color: var(--heart); }
 
-  .tn-section-title { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); margin: 22px 0 10px 0; padding-bottom: 8px; border-bottom: 1px dashed var(--line); display: flex; align-items: center; gap: 8px; }
+  .tn-section-title { font-family: 'Baloo 2', sans-serif; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); margin: 22px 0 10px 0; padding-bottom: 8px; border-bottom: 1px dashed var(--line); display: flex; align-items: center; gap: 8px; }
   .tn-year-select, .tn-month-select { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--ink); background: #fff; border: 1.5px solid var(--line); border-radius: 6px; padding: 5px 8px; cursor: pointer; }
   .tn-chart-title { font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; letter-spacing: 0.3px; }
 
-  .tn-stat-avatar { position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 3px rgba(33,29,26,0.18); }
-  .tn-history-icon img { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; display: block; }
+  .tn-stat-avatar { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 3px rgba(33,29,26,0.18); }
+  .tn-history-icon { position: relative; width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: visible; }
+  .tn-history-icon.me { background: var(--tang); }
+  .tn-history-icon.friend { background: var(--clay); }
+  .tn-history-icon.recharge { background: var(--ball); color: var(--ink); }
+  .tn-history-icon img { width: 100%; height: 100%; border-radius: 10px; object-fit: cover; display: block; }
+  .tn-history-icon .tn-history-av { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2.5px solid #fff; box-shadow: 0 1px 4px rgba(33,29,26,0.28); }
+  .tn-history-icon.me .tn-history-av { border-color: var(--tang); }
+  .tn-history-icon.friend .tn-history-av { border-color: var(--clay); }
+  .tn-history-icon .tn-kind-badge { position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(33,29,26,0.25); z-index: 5; }
+  .tn-history-icon .tn-kind-badge svg { width: 11px; height: 11px; display: block; }
   .tn-history-icon.together { position: relative; background: linear-gradient(135deg, var(--court), var(--court-light)); overflow: visible; }
-  .tn-history-icon.together .tn-pair-avatar { position: absolute; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(33,29,26,0.3); }
-  .tn-history-icon.together .tn-pair-avatar.a { top: -3px; left: -4px; z-index: 2; }
-  .tn-history-icon.together .tn-pair-avatar.b { bottom: -3px; right: -4px; z-index: 1; }
-  .tn-history-icon.together .tn-heart-badge { position: absolute; top: -7px; right: -7px; font-size: 12px; z-index: 4; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25)); animation: tnHeartBeat 1.6s ease-in-out infinite; }
+  .tn-history-icon.together .tn-pair-avatar { position: absolute; width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(33,29,26,0.3); }
+  .tn-history-icon.together .tn-pair-avatar.a { top: -5px; left: -6px; z-index: 2; }
+  .tn-history-icon.together .tn-pair-avatar.b { bottom: -5px; right: -6px; z-index: 1; }
+  .tn-history-icon.together .tn-heart-badge { position: absolute; top: -9px; right: -9px; font-size: 14px; z-index: 4; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25)); animation: tnHeartBeat 1.6s ease-in-out infinite; }
+  .tn-history-icon.together .tn-kind-badge { top: auto; bottom: -5px; left: -5px; right: auto; }
   @keyframes tnHeartBeat { 0%,100% { transform: scale(1); } 15% { transform: scale(1.25); } 30% { transform: scale(1); } }
 
-  .tn-quickadd { background: linear-gradient(135deg, rgba(207,224,91,0.20), rgba(189,93,49,0.06)); border: 1.5px solid rgba(189,93,49,0.22); border-radius: 16px; padding: 16px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+  .tn-quickadd { background: linear-gradient(135deg, rgba(207,224,91,0.18), rgba(189,93,49,0.06)); border: 1.5px solid rgba(189,93,49,0.18); border-radius: 18px; padding: 16px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
   .tn-quickadd .tn-section-title { margin-top: 0; border-bottom: 1px dashed rgba(189,93,49,0.25); }
-  .tn-form-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); }
-  .tn-toggle-row { display: flex; gap: 6px; margin-bottom: 12px; background: var(--chalk-dim); border-radius: 10px; padding: 4px; }
-  .tn-toggle-btn { flex: 1; border: none; background: transparent; padding: 9px 4px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.18s ease; }
+  .tn-form-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; box-shadow: var(--shadow-sm); }
+  .tn-toggle-row { display: flex; gap: 6px; margin-bottom: 12px; background: var(--chalk-dim); border-radius: 12px; padding: 4px; }
+  .tn-toggle-btn { flex: 1; border: none; background: transparent; padding: 9px 4px; border-radius: 11px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.18s ease; }
   .tn-toggle-btn.active { background: var(--court); color: var(--chalk); box-shadow: var(--shadow-sm); }
   .tn-toggle-btn.recharge-active { background: var(--clay); color: var(--chalk); box-shadow: var(--shadow-sm); }
   .tn-toggle-btn:active { transform: scale(0.97); }
   .tn-field-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
   .tn-field { flex: 1; min-width: 130px; }
   .tn-field label { display: block; font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; letter-spacing: 0.3px; }
-  .tn-field input, .tn-field select { width: 100%; padding: 9px 10px; border: 1.5px solid var(--line); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--ink); background: var(--chalk); transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+  .tn-field input, .tn-field select { width: 100%; padding: 9px 10px; border: 1.5px solid var(--line); border-radius: 11px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--ink); background: var(--chalk); transition: border-color 0.15s ease, box-shadow 0.15s ease; }
   .tn-field input:focus, .tn-field select:focus { outline: none; border-color: var(--court); box-shadow: 0 0 0 3px rgba(31,64,53,0.1); }
   .tn-amount-preview { font-size: 13px; color: var(--ink-soft); margin-bottom: 10px; }
   .tn-amount-preview strong { font-family: 'JetBrains Mono', monospace; color: var(--court); font-size: 15px; }
   .tn-play-type-row { display: flex; gap: 6px; margin-bottom: 10px; }
-  .tn-play-type-btn { flex: 1; border: 1.5px solid var(--line); background: var(--chalk); padding: 10px 6px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; text-align: center; transition: all 0.18s ease; }
+  .tn-play-type-btn { flex: 1; border: 1.5px solid var(--line); background: var(--chalk); padding: 10px 6px; border-radius: 11px; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; text-align: center; transition: all 0.18s ease; }
   .tn-play-type-btn.selected { border-color: var(--court); background: var(--court); color: var(--chalk); box-shadow: var(--shadow-sm); }
   .tn-play-type-btn:active { transform: scale(0.97); }
-  .tn-submit-btn { width: 100%; border: none; background: var(--court); color: var(--chalk); padding: 12px; border-radius: 8px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.18s ease; box-shadow: var(--shadow-sm); }
+  .tn-submit-btn { width: 100%; border: none; background: var(--court); color: var(--chalk); padding: 12px; border-radius: 12px; font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: all 0.18s ease; box-shadow: var(--shadow-sm); }
   .tn-submit-btn:hover { background: var(--court-light); box-shadow: var(--shadow-md); }
   .tn-submit-btn:active { transform: scale(0.98); }
   .tn-submit-btn.recharge { background: var(--clay); }
   .tn-submit-btn.recharge:hover { background: var(--clay-deep); }
-  .tn-cancel-edit { width: 100%; border: 1.5px solid var(--line); background: var(--chalk); padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; margin-top: 8px; transition: all 0.15s ease; }
+  .tn-cancel-edit { width: 100%; border: 1.5px solid var(--line); background: var(--chalk); padding: 9px; border-radius: 12px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; margin-top: 8px; transition: all 0.15s ease; }
   .tn-cancel-edit:active { transform: scale(0.98); }
 
-  .tn-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+  .tn-chart-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
   .tn-linechart { width: 100%; height: auto; display: block; overflow: visible; }
   .tn-line-path { fill: none; stroke-width: 3; transition: opacity 0.25s ease, stroke-width 0.25s ease; }
   .tn-line-dot { transition: opacity 0.25s ease, r 0.25s ease; }
@@ -120,13 +161,13 @@
 
   .tn-donut-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center; }
   .tn-donut { flex-shrink: 0; }
-  .tn-donut-center-num { font-family: 'Oswald', sans-serif; font-weight: 700; }
+  .tn-donut-center-num { font-family: 'Baloo 2', sans-serif; font-weight: 700; }
   .tn-donut-legend { display: flex; flex-direction: column; gap: 8px; }
   .tn-donut-leg-item { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink); }
   .tn-donut-leg-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
   .tn-donut-leg-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; margin-left: auto; padding-left: 10px; }
 
-  .tn-settle-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+  .tn-settle-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
   .tn-settle-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; }
   .tn-settle-row + .tn-settle-row { border-top: 1px dashed var(--line); }
   .tn-settle-name { color: var(--ink-soft); }
@@ -134,12 +175,13 @@
   .tn-settle-result { margin-top: 12px; padding: 12px; border-radius: 10px; background: linear-gradient(135deg, rgba(207,224,91,0.25), rgba(31,64,53,0.06)); font-size: 14px; font-weight: 600; color: var(--court); text-align: center; }
 
   .tn-history { display: flex; flex-direction: column; gap: 8px; }
-  .tn-history-item { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .tn-history-item { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); transition: transform 0.15s ease, box-shadow 0.15s ease; }
   .tn-history-item:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-  .tn-history-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; color: var(--chalk); }
+  .tn-history-icon { width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; color: var(--chalk); }
   .tn-history-icon.me { background: var(--tang); }
   .tn-history-icon.friend { background: var(--clay); }
   .tn-history-icon.recharge { background: var(--ball); color: var(--ink); }
+  .tn-history-icon svg { display: block; width: 22px; height: 22px; }
   .tn-history-body { flex: 1; min-width: 0; }
   .tn-history-title { font-size: 13.5px; font-weight: 500; color: var(--ink); }
   .tn-history-sub { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
@@ -159,18 +201,167 @@
   .tn-empty-center { position: relative; z-index: 2; display: inline-flex; flex-direction: column; align-items: center; gap: 8px; }
   .tn-empty-text { font-family: 'Gaegu', cursive; font-size: 16px; font-weight: 700; color: var(--ink-soft); }
 
-  .tn-settings-panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-md); }
+  .tn-settings-panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-md); }
   .tn-settings-panel .tn-field-row:last-child { margin-bottom: 0; }
   .tn-settings-close { width: 100%; border: 1.5px solid var(--line); background: var(--chalk); padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; margin-top: 4px; }
   .tn-loading { text-align: center; padding: 40px 0; color: var(--ink-soft); font-size: 13px; }
 
+  /* 标签内容淡入 */
+  .tn-tab-content { animation: tnFade .26s ease; }
+  @keyframes tnFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+  /* 信息条 chips */
+  .tn-streak-bar { display: flex; gap: 8px; flex-wrap: wrap; margin: 2px 0 14px; }
+  .tn-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 6px 13px; font-size: 12.5px; color: var(--ink-soft); box-shadow: var(--shadow-sm); }
+  .tn-chip b { font-family: 'JetBrains Mono', monospace; color: var(--court); font-size: 15px; }
+  .tn-chip.tn-chip-fire b { color: var(--clay); }
+  .tn-chip .tn-chip-ico { font-size: 14px; }
+
+  /* 欢迎页 */
+  .tn-welcome { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(rgba(33,29,26,0.22), rgba(33,29,26,0.42)), url('welcome.jpg') center/cover no-repeat; }
+  .tn-welcome-card { background: rgba(255,255,255,0.93); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 26px; padding: 38px 32px; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.28); max-width: 340px; width: 100%; animation: tnSlideUp .35s ease; }
+  .tn-welcome-title { font-family: 'Baloo 2', sans-serif; font-size: 40px; font-weight: 800; color: var(--court); line-height: 1; }
+  .tn-welcome-sub { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--clay); letter-spacing: 2.5px; text-transform: lowercase; margin-top: 8px; }
+  .tn-welcome-pair { display: flex; align-items: center; justify-content: center; margin-top: 20px; }
+  .tn-welcome-av { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(33,29,26,0.18); }
+  .tn-welcome-av + .tn-welcome-av { margin-left: -16px; }
+  .tn-welcome-meta { font-size: 13px; color: var(--ink-soft); margin-top: 12px; }
+  .tn-welcome-btn { margin-top: 24px; width: 100%; border: none; background: var(--court); color: var(--chalk); padding: 14px; border-radius: 14px; font-family: 'Baloo 2', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all .15s ease; box-shadow: var(--shadow-md); }
+  .tn-welcome-btn:hover { background: var(--court-light); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+  .tn-welcome-btn:active { transform: scale(0.98); }
+
+  /* 日历 */
+  .tn-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+  .tn-cal-nav { display: flex; align-items: center; gap: 6px; }
+  .tn-cal-nav-btn { width: 32px; height: 32px; border: 1.5px solid var(--line); background: var(--card); border-radius: 11px; cursor: pointer; font-size: 15px; color: var(--ink-soft); display: flex; align-items: center; justify-content: center; transition: all .15s ease; }
+  .tn-cal-nav-btn:hover { border-color: var(--court); color: var(--court); }
+  .tn-cal-nav-btn:active { transform: scale(0.92); }
+  .tn-cal-title { font-family: 'Baloo 2', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 1px; color: var(--court); margin: 0; }
+  .tn-cal-legend { display: flex; gap: 12px; flex-wrap: wrap; }
+  .tn-cal-leg { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--ink-soft); }
+  .tn-cal-leg-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(33,29,26,0.15); }
+  .tn-cal-leg-dot.me { background: var(--tang); }
+  .tn-cal-leg-dot.friend { background: var(--clay); }
+  .tn-cal-leg-dot.together { background: var(--heart); }
+  .tn-cal-leg-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(33,29,26,0.15); vertical-align: middle; }
+  .tn-cal-slicer { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .tn-slice { display: inline-flex; align-items: center; gap: 6px; font-family: 'Baloo 2', sans-serif; font-size: 12px; font-weight: 600; color: var(--ink-soft); background: var(--chalk-dim); border: 1.5px solid transparent; border-radius: 999px; padding: 4px 12px 4px 5px; cursor: pointer; transition: all .15s ease; line-height: 1; }
+  .tn-slice:hover { background: var(--chalk); border-color: rgba(33,29,26,0.12); }
+  .tn-slice.active { background: #fff; border-color: var(--pink); color: var(--ink); box-shadow: 0 2px 7px rgba(217,106,139,0.28); }
+  .tn-slice-av { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(33,29,26,0.18); }
+  .tn-slice-emoji { font-size: 12px; line-height: 1; }
+  .tn-cal-leg-kind { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; }
+  .tn-cal-leg-kind svg { display: block; width: 100%; height: 100%; }
+  .tn-cal-legend-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+  .tn-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .tn-cal-dow { text-align: center; font-size: 11px; color: var(--ink-soft); padding-bottom: 2px; font-weight: 600; letter-spacing: .5px; }
+  .tn-cal-dow.tn-cal-weekend { color: var(--clay); }
+  .tn-cal-cell { position: relative; aspect-ratio: 1 / 1; border-radius: 13px; background: var(--chalk-dim); border: 1px solid transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; overflow: visible; }
+  .tn-cal-cell.tn-cal-pad { background: transparent; border-color: transparent; }
+  .tn-cal-cell.tn-cal-has { cursor: pointer; border-color: rgba(33,29,26,0.10); }
+  .tn-cal-cell.tn-cal-has:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: rgba(33,29,26,0.25); }
+  .tn-cal-cell.tn-cal-has:active { transform: scale(0.97); }
+  .tn-cal-cell.tn-cal-today { border-color: var(--clay); box-shadow: 0 0 0 1.5px rgba(189,93,49,0.35); }
+  .tn-cal-cell.tn-cal-idle { border-color: rgba(23,163,152,0.35); }
+  .tn-cal-cell.tn-cal-busy { border-color: rgba(189,93,49,0.35); }
+  .tn-cal-cell.tn-cal-dim { opacity: 0.26; filter: grayscale(0.35); }
+  .tn-cal-cell.tn-cal-match { border-color: var(--pink); box-shadow: 0 0 0 2px rgba(217,106,139,0.30); }
+  .tn-cal-cell.tn-cal-unknown { border-style: dashed; border-color: rgba(107,98,88,0.25); }
+  .tn-cal-daynum { position: relative; z-index: 2; font-size: 13px; font-weight: 600; color: var(--ink); font-family: 'JetBrains Mono', monospace; line-height: 1; }
+  .tn-cal-cell.tn-cal-pad .tn-cal-daynum { color: transparent; }
+  .tn-cal-marks { display: flex; align-items: center; justify-content: center; margin-top: 3px; padding: 0 2px; position: relative; z-index: 2; }
+  .tn-cal-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(33,29,26,0.18); }
+  .tn-cal-avatar + .tn-cal-avatar { margin-left: -15px; }
+  .tn-cal-heart { position: absolute; top: 2px; right: 3px; font-size: 11px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2)); z-index: 3; }
+  .tn-cal-kind-icon { position: absolute; top: 2px; left: 3px; z-index: 3; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; overflow: visible; }
+  .tn-cal-kind-icon svg { display: block; width: 100%; height: 100%; }
+  .tn-racket-svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 1px 2px rgba(33,29,26,0.18)); }
+  .tn-racket-swing { transform-box: fill-box; transform-origin: 50% 100%; }
+  .tn-hit .tn-ball, .tn-hit .tn-trail, .tn-hit .tn-spark { transform-box: fill-box; }
+  .tn-hit .tn-ball { transform-origin: center; }
+  .tn-hit .tn-spark { transform-origin: center; }
+  .tn-cal-cell:hover .tn-racket-swing { animation: tnSwing 1.15s cubic-bezier(.34,1.15,.5,1); }
+  .tn-cal-cell:hover .tn-hit .tn-ball { animation: tnBall 1.15s ease-out; }
+  .tn-cal-cell:hover .tn-hit .tn-trail { animation: tnTrail 1.15s ease-out; }
+  .tn-cal-cell:hover .tn-hit .tn-spark { animation: tnSpark 1.15s ease-out; }
+  @keyframes tnSwing {
+    0%   { transform: rotate(-13deg); }
+    30%  { transform: rotate(23deg); }
+    55%  { transform: rotate(9deg); }
+    100% { transform: rotate(0deg); }
+  }
+  @keyframes tnBall {
+    0%, 24% { transform: translate(0,0) scale(1); opacity: 1; }
+    32%     { opacity: 1; }
+    100%    { transform: translate(22px,-15px) scale(0.55); opacity: 0; }
+  }
+  @keyframes tnTrail {
+    0%, 24% { opacity: 0; }
+    33%     { opacity: 0.85; }
+    100%    { opacity: 0; }
+  }
+  @keyframes tnSpark {
+    0%, 22% { opacity: 0; transform: scale(0.2); }
+    31%     { opacity: 1; transform: scale(1); }
+    60%     { opacity: 0; transform: scale(1.5); }
+    100%    { opacity: 0; transform: scale(1.5); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tn-cal-cell:hover .tn-racket-swing,
+    .tn-cal-cell:hover .tn-hit .tn-ball,
+    .tn-cal-cell:hover .tn-hit .tn-trail,
+    .tn-cal-cell:hover .tn-hit .tn-spark { animation: none; }
+  }
+  .tn-cal-kind-recharge { top: auto; bottom: 2px; right: 3px; left: auto; }
+  .tn-cal-more { font-size: 9px; color: var(--ink-soft); font-weight: 600; }
+
+  /* 当日明细弹窗 */
+  .tn-modal-overlay { position: fixed; inset: 0; background: rgba(33,29,26,0.46); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); display: flex; align-items: flex-end; justify-content: center; z-index: 60; padding: 0; animation: tnFade .2s ease; }
+  .tn-modal { background: var(--chalk); width: 100%; max-width: 560px; border-radius: 20px 20px 0 0; max-height: 84vh; display: flex; flex-direction: column; box-shadow: 0 -12px 44px rgba(0,0,0,0.28); animation: tnSlideUp .26s ease; }
+  @keyframes tnSlideUp { from { transform: translateY(24px); opacity: .55; } to { transform: none; opacity: 1; } }
+  .tn-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 11px; border-bottom: 1px dashed var(--line); }
+  .tn-modal-title { font-family: 'Baloo 2', sans-serif; font-size: 17px; font-weight: 600; color: var(--court); letter-spacing: .5px; }
+  .tn-modal-close { width: 30px; height: 30px; border: none; background: var(--chalk-dim); border-radius: 9px; font-size: 16px; cursor: pointer; color: var(--ink-soft); transition: all .15s; }
+  .tn-modal-close:hover { background: var(--line); }
+  .tn-modal-body { padding: 12px 16px; overflow: auto; }
+  .tn-modal-foot { padding: 10px 16px 16px; }
+  .tn-modal-add { width: 100%; border: 1.5px dashed var(--court); background: transparent; color: var(--court); padding: 11px; border-radius: 11px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all .15s ease; }
+  .tn-modal-add:hover { background: rgba(31,64,53,0.06); }
+  .tn-modal-empty { text-align: center; color: var(--ink-soft); font-size: 13px; padding: 26px 0; }
+
+  /* 头像降级兜底 */
+  .tn-history-av { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; display: block; }
+
+  @media (min-width: 560px) {
+    .tn-modal-overlay { align-items: center; padding: 20px; }
+    .tn-modal { border-radius: 18px; }
+  }
+
   @media (max-width: 600px) {
     #tennis-app { padding: 12px; border-radius: 0; }
     .tn-score-main { font-size: 36px; }
-    .tn-title { font-size: 24px; }
+    .tn-title { font-size: 26px; }
+    .tn-subtitle { font-size: 11px; }
+    .tn-hero { height: 140px; margin: -12px -12px 10px; border-radius: 0; }
+    .tn-hero-content .tn-title { font-size: 28px; }
     .tn-field input, .tn-field select { font-size: 16px; }
     .tn-field-row { flex-direction: column; gap: 10px; }
     .tn-field { min-width: 0; width: 100%; }
+    .tn-cal-cell { border-radius: 10px; }
+    .tn-cal-daynum { font-size: 12px; }
+    .tn-cal-avatar { width: 28px; height: 28px; border-width: 1.5px; }
+    .tn-cal-avatar + .tn-cal-avatar { margin-left: -12px; }
+    .tn-cal-kind-icon { width: 22px; height: 22px; }
+    .tn-cal-slicer { gap: 6px; margin-top: 8px; }
+    .tn-slice { font-size: 11px; padding: 3px 10px 3px 4px; }
+    .tn-racket-svg { width: 100%; height: 100%; }
+    .tn-cal-heart { font-size: 10px; }
+    .tn-stats, .tn-stats-secondary { gap: 7px; }
+    .tn-stat-num { font-size: 19px; }
+    .tn-welcome-title { font-size: 32px; }
+    .tn-welcome-card { padding: 30px 24px; border-radius: 22px; }
+    .tn-welcome-av { width: 44px; height: 44px; }
   }
 </style>
 
@@ -197,7 +388,13 @@
     playFilter: 'month',
     filterMonth: new Date().toISOString().slice(0,7),
     summaryYear: new Date().getFullYear(),
-    focusLine: null
+    focusLine: null,
+    calYear: new Date().getFullYear(),
+    calMonth: new Date().getMonth(),
+    calSelected: null,
+    calFilter: 'all',
+    returnTab: 'record',
+    showWelcome: true
   };
 
   function uid() { return 't' + Date.now() + Math.random().toString(36).slice(2,7); }
@@ -223,6 +420,52 @@
       + '<path d="M24 32 Q 25 36, 23 37" fill="none" stroke="var(--court)" stroke-width="1.3" stroke-linecap="round"/>'
       + '<path d="M12 10 Q 20 3, 28 10 Q 24 8, 20 8 Q 16 8, 12 10 Z" fill="var(--pink)" stroke="#C97A94" stroke-width="0.8"/>'
       + '<circle cx="20" cy="6.5" r="1.5" fill="#C97A94"/>'
+      + '</svg>';
+  }
+
+  let __rkSeq = 0;
+  function racketIcon(size, animated) {
+    const s = size || 22;
+    const a = !!animated;
+    const id = 'rk' + (__rkSeq++);
+    const fF = 'rkF' + id, fG = 'rkG' + id, fB = 'rkB' + id, fH = 'rkH' + id;
+    const head = '<g class="tn-racket-swing">'
+      + '<path d="M29.4 40 L29.4 58 Q32 61 34.6 58 L34.6 40 Z" fill="url(#' + fG + ')"/>'
+      + '<path d="M30 43 H34 M30 47 H34 M30 51 H34 M30 55 H34" stroke="#0a3f37" stroke-width="0.9" opacity="0.45" stroke-linecap="round"/>'
+      + '<path d="M31.6 41 L24.5 29 M32.4 41 L39.5 29" stroke="url(#' + fF + ')" stroke-width="3.6" fill="none" stroke-linecap="round"/>'
+      + '<ellipse cx="32" cy="19" rx="14.5" ry="18.5" fill="none" stroke="url(#' + fF + ')" stroke-width="4.4"/>'
+      + '<g clip-path="url(#' + fH + ')">'
+        + '<path d="M20 2 V36 M24 1 V37 M28 0 V38 M32 0 V38 M36 0 V38 M40 1 V37 M44 2 V36" stroke="#1c2026" stroke-width="0.6" opacity="0.9" fill="none"/>'
+        + '<path d="M14 6 H50 M13 10 H51 M13 14 H51 M13 18 H51 M13 22 H51 M14 26 H50 M16 30 H48 M19 34 H45" stroke="#1c2026" stroke-width="0.6" opacity="0.9" fill="none"/>'
+      + '</g>'
+      + '<path d="M20 8 A14.5 18.5 0 0 1 31 1.2" fill="none" stroke="#ffffff" stroke-width="1.7" opacity="0.6" stroke-linecap="round"/>'
+      + '<ellipse cx="32" cy="19" rx="12.3" ry="16.3" fill="none" stroke="#1c2026" stroke-width="0.5" opacity="0.3"/>'
+      + '</g>';
+    const hit = a ? '<g class="tn-hit">'
+      + '<path class="tn-trail" d="M33 19 q 12 -7 23 -16" fill="none" stroke="#cfe23b" stroke-width="2.4" stroke-linecap="round" opacity="0"/>'
+      + '<g class="tn-spark" opacity="0">'
+        + '<path d="M33 19 L33 9 M33 19 L43 19 M33 19 L33 29 M33 19 L23 19 M33 19 L40 12 M33 19 L26 26 M33 19 L40 26 M33 19 L26 12" stroke="#fff7c2" stroke-width="1.1" stroke-linecap="round"/>'
+      + '</g>'
+      + '<circle class="tn-ball" cx="33" cy="19" r="5" fill="url(#' + fB + ')" stroke="#9fbb27" stroke-width="0.7"/>'
+      + '<path d="M30.4 16.6 Q33 20 35.6 16.6" fill="none" stroke="#ffffff" stroke-width="0.7" opacity="0.8"/>'
+      + '</g>' : '';
+    return '<svg class="tn-racket-svg" width="' + s + '" height="' + s + '" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;">'
+      + '<defs>'
+        + '<linearGradient id="' + fF + '" x1="0.15" y1="0.05" x2="0.9" y2="1">'
+          + '<stop offset="0" stop-color="#ffc2dc"/><stop offset="0.5" stop-color="#ec7fae"/><stop offset="1" stop-color="#c44e88"/>'
+        + '</linearGradient>'
+        + '<linearGradient id="' + fG + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e789b0"/><stop offset="1" stop-color="#a83e6a"/></linearGradient>'
+        + '<radialGradient id="' + fB + '" cx="0.36" cy="0.32" r="0.85"><stop offset="0" stop-color="#f3ff8a"/><stop offset="0.7" stop-color="#cfe23b"/><stop offset="1" stop-color="#a9c92a"/></radialGradient>'
+        + '<clipPath id="' + fH + '"><ellipse cx="32" cy="19" rx="14.5" ry="18.5"/></clipPath>'
+      + '</defs>'
+      + head + hit + '</svg>';
+  }
+  function coinIcon(size) {
+    const s = size || 18;
+    return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;">'
+      + '<circle cx="12" cy="12" r="10" fill="#F2D56F" stroke="#C49A3B" stroke-width="1.2"/>'
+      + '<circle cx="12" cy="12" r="7" fill="none" stroke="#C49A3B" stroke-width="0.8" stroke-dasharray="2 2"/>'
+      + '<text x="12" y="16" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#8A6A1F">¥</text>'
       + '</svg>';
   }
 
@@ -357,6 +600,38 @@
     return months;
   }
 
+  function fmtDateKey(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+
+  function getDayAgg(dateStr) {
+    const plays = state.transactions.filter(t => t.kind === 'play' && t.date === dateStr);
+    const recharges = state.transactions.filter(t => t.kind === 'recharge' && t.date === dateStr);
+    const players = new Set(); let together = false, hours = 0, cost = 0;
+    const rateTypes = new Set();
+    for (const t of plays) {
+      if (t.playType === 'together') { players.add('me'); players.add('friend'); together = true; }
+      else if (t.playType === 'me') players.add('me');
+      else if (t.playType === 'friend') players.add('friend');
+      hours += Number(t.hours) || 0; cost += Number(t.amount) || 0;
+      if (t.rateType) rateTypes.add(t.rateType);
+    }
+    let dayStatus = 'unknown';
+    if (plays.length > 0) {
+      // 仅保留两种状态：含任何 peak 即判为「忙时」（优先），否则「闲时」
+      if (rateTypes.has('peak')) dayStatus = 'busy';
+      else if (rateTypes.has('off')) dayStatus = 'idle';
+    }
+    return { plays, recharges, players: [...players], together, hours, cost, rateTypes: [...rateTypes], dayStatus };
+  }
+
+  function cellMatchesFilter(agg) {
+    const f = state.calFilter;
+    if (!f || f === 'all') return true;
+    if (f === 'me') return agg.players.includes('me');
+    if (f === 'friend') return agg.players.includes('friend');
+    if (f === 'together') return agg.together;
+    return true;
+  }
+
   function resetForm() {
     state.editingId = null; state.formMode = 'play'; state.playType = 'together'; state.rateType = 'off';
     state.hours = 1; state.payer = 'split'; state.formDate = new Date().toISOString().slice(0,10);
@@ -364,6 +639,7 @@
   }
 
   async function submitForm() {
+    const wasEditing = !!state.editingId;
     let amount;
     if (state.formMode === 'play') { const hours = parseFloat(state.hours); if (!hours || hours <= 0) return; amount = Math.round(RATES[state.rateType] * hours * 100) / 100; }
     else { amount = parseFloat(state.formAmount); if (!amount || amount <= 0) return; }
@@ -375,7 +651,7 @@
         else { t.payer = state.payer; t.playType = undefined; t.rateType = undefined; t.hours = undefined; }
         render(); await dbUpdateTx(t);
       }
-      resetForm(); render();
+      resetForm(); if (wasEditing) state.activeTab = state.returnTab || 'record'; render();
     } else {
       const tx = { id: uid(), kind: state.formMode, date: state.formDate, amount: amount, note: state.formNote.trim() };
       if (state.formMode === 'play') { tx.playType = state.playType; tx.rateType = state.rateType; tx.hours = parseFloat(state.hours); }
@@ -387,7 +663,7 @@
 
   function startEdit(id) {
     const t = state.transactions.find(x => x.id === id); if (!t) return;
-    state.activeTab = 'record'; state.editingId = id; state.formMode = t.kind; state.formDate = t.date; state.formNote = t.note || '';
+    state.returnTab = state.activeTab; state.activeTab = 'record'; state.editingId = id; state.formMode = t.kind; state.formDate = t.date; state.formNote = t.note || '';
     if (t.kind === 'play') { state.playType = t.playType || 'together'; state.rateType = t.rateType || 'off'; state.hours = t.hours || 1; }
     else { state.payer = t.payer || 'split'; state.formAmount = String(t.amount); }
     render();
@@ -401,6 +677,7 @@
   }
 
   function openSettings() {
+    if (state.showSettings) { state.showSettings = false; render(); return; }
     state.settingsDraft = { myName: state.settings.myName, friendName: state.settings.friendName, initialBalance: state.settings.initialBalance };
     state.showSettings = true; render();
   }
@@ -431,13 +708,23 @@
   function render() {
     if (!state.loaded) { root.innerHTML = '<div class="tn-loading">加载中...</div>'; return; }
     const s = state.settings;
+    if (state.showWelcome) {
+      root.innerHTML = renderWelcome(s);
+      const startBtn = document.getElementById('tn-welcome-start');
+      if (startBtn) startBtn.onclick = () => { state.showWelcome = false; render(); };
+      return;
+    }
     let html = '';
 
-    html += '<div class="tn-header"><h1 class="tn-title">' + ballMascot(34) + '网球<span>记录</span>本</h1>'
-      + '<button class="tn-settings-btn" id="tn-settings-btn">⚙</button></div>';
+    html += '<div class="tn-hero">'
+      + '<div class="tn-hero-bg"></div><div class="tn-hero-overlay"></div>'
+      + '<div class="tn-hero-content"><div class="tn-title-wrap"><h1 class="tn-title">Net Worth</h1><p class="tn-subtitle">·our tennis diary·</p></div>'
+      + '<button class="tn-settings-btn' + (state.showSettings ? ' active' : '') + '" id="tn-settings-btn">⚙</button></div></div>';
+    html += '<div class="tn-hero-divider"><span class="hd-dot c"></span><span class="hd-dot b"></span><span class="hd-dot k"></span></div>';
 
     html += '<div class="tn-tabs">'
       + '<button class="tn-tab ' + (state.activeTab === 'record' ? 'active' : '') + '" data-tab="record">记录</button>'
+      + '<button class="tn-tab ' + (state.activeTab === 'calendar' ? 'active' : '') + '" data-tab="calendar">日历</button>'
       + '<button class="tn-tab ' + (state.activeTab === 'dashboard' ? 'active' : '') + '" data-tab="dashboard">数据看板</button></div>';
 
     if (state.showSettings) {
@@ -449,12 +736,60 @@
         + '<button class="tn-settings-close" id="tn-settings-cancel">取消</button></div>';
     }
 
-    if (state.activeTab === 'record') html += renderRecord(s);
-    else html += renderDashboard(s);
+    let tabHtml = '';
+    if (state.activeTab === 'record') tabHtml = renderRecord(s);
+    else if (state.activeTab === 'calendar') tabHtml = renderCalendar(s);
+    else tabHtml = renderDashboard(s);
+    html += '<div class="tn-tab-content">' + tabHtml + '</div>';
 
     root.innerHTML = html;
     attachHandlers();
     if (state.activeTab === 'record') animateBalance();
+  }
+
+  function avFallbackImg(path, init, bg, cls) {
+    if (!path) return '<span class="' + cls + '" style="background:' + bg + ';color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">' + escapeHtml(init) + '</span>';
+    return '<img class="' + cls + '" src="' + path + '" alt="" onerror="__tnAvFallback(this,\'' + escapeHtml(init) + '\',\'' + bg + '\')" />';
+  }
+  window.__tnAvFallback = function(img, init, bg) {
+    const span = document.createElement('span');
+    span.className = img.className;
+    span.style.cssText = img.style.cssText + ';background:' + bg + ';color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;';
+    span.textContent = init;
+    if (img.parentNode) img.parentNode.replaceChild(span, img);
+  };
+  function historyItemHtml(t, s, editing) {
+    const editingCls = editing ? ' editing' : '';
+    let iconHtml, title, sub, amount;
+    if (t.kind === 'recharge') {
+      const payerLabel = t.payer === 'me' ? s.myName + '出' : (t.payer === 'friend' ? s.friendName + '出' : '各半');
+      iconHtml = '<div class="tn-history-icon recharge">' + coinIcon(22) + '</div>';
+      title = '球卡充值 · ' + payerLabel + (t.note ? ' · ' + escapeHtml(t.note) : '');
+      sub = fmtFullDate(t.date);
+      amount = '<div class="tn-history-amount recharge">+' + fmtMoney(t.amount) + '</div>';
+    } else {
+      const label = t.playType === 'together' ? '一起打' : (t.playType === 'me' ? s.myName + '自己打' : s.friendName + '自己打');
+      const iconClass = t.playType === 'together' ? 'together' : (t.playType === 'me' ? 'me' : 'friend');
+      let face;
+      if (t.playType === 'together') {
+        face = avFallbackImg(AVATAR_KE, s.friendName.slice(0,1), '#BD5D31', 'tn-pair-avatar a')
+            + avFallbackImg(AVATAR_TANG, s.myName.slice(0,1), '#17A398', 'tn-pair-avatar b')
+            + '<span class="tn-heart-badge">💗</span>';
+      } else if (t.playType === 'me') {
+        face = avFallbackImg(AVATAR_TANG, s.myName.slice(0,1), '#17A398', 'tn-history-av');
+      } else {
+        face = avFallbackImg(AVATAR_KE, s.friendName.slice(0,1), '#BD5D31', 'tn-history-av');
+      }
+      iconHtml = '<div class="tn-history-icon ' + iconClass + '">' + face + '</div>';
+      title = label + (t.note ? ' · ' + escapeHtml(t.note) : '');
+      sub = fmtFullDate(t.date) + (t.rateType ? ' · ' + RATE_LABELS[t.rateType] + ' ' + t.hours + 'h' : '');
+      amount = '<div class="tn-history-amount">-' + fmtMoney(t.amount) + '</div>';
+    }
+    return '<div class="tn-history-item' + editingCls + '">' + iconHtml
+      + '<div class="tn-history-body"><div class="tn-history-title">' + title + '</div>'
+      + '<div class="tn-history-sub">' + sub + '</div></div>'
+      + amount
+      + '<div class="tn-history-actions"><button class="tn-history-edit" data-edit="' + t.id + '">✎</button><button class="tn-history-del" data-del="' + t.id + '">×</button></div></div>';
   }
 
   function renderRecord(s) {
@@ -500,6 +835,10 @@
       + '<div class="tn-court-line"><div class="tn-court-line-fill" style="width:' + spending.pct + '%"></div><div class="tn-court-line-ball" style="left:' + spending.pct + '%"></div></div>'
       + '<div class="tn-score-foot"><span>已用 ' + fmtMoney(spending.totalSpent) + '</span><span>距上次打球 ' + (spending.daysSinceLast === null ? '—' : spending.daysSinceLast + ' 天') + '</span></div></div>';
 
+    const rMonthKey = new Date().toISOString().slice(0,7);
+    const rMonthPlays = state.transactions.filter(t => t.kind === 'play' && t.date.slice(0,7) === rMonthKey).length;
+    html += '<div class="tn-streak-bar">'
+      + '<span class="tn-chip"><span class="tn-chip-ico">🎾</span>本月已打 <b>' + rMonthPlays + '</b> 次</span></div>';
     html += '<div class="tn-section-title">记录</div>';
     if (state.transactions.length === 0) {
       html += '<div class="tn-empty"><div class="tn-empty-scatter">'
@@ -511,36 +850,119 @@
     } else {
       html += '<div class="tn-history">';
       const sorted = [...state.transactions].sort((a, b) => { if (b.date !== a.date) return b.date.localeCompare(a.date); return b.id.localeCompare(a.id); });
-      for (const t of sorted) {
-        const editing = state.editingId === t.id ? ' editing' : '';
-        if (t.kind === 'recharge') {
-          const payerLabel = t.payer === 'me' ? s.myName + '出' : (t.payer === 'friend' ? s.friendName + '出' : '各半');
-          html += '<div class="tn-history-item' + editing + '"><div class="tn-history-icon recharge">+</div>'
-            + '<div class="tn-history-body"><div class="tn-history-title">球卡充值 · ' + payerLabel + (t.note ? ' · ' + escapeHtml(t.note) : '') + '</div>'
-            + '<div class="tn-history-sub">' + fmtFullDate(t.date) + '</div></div>'
-            + '<div class="tn-history-amount recharge">+' + fmtMoney(t.amount) + '</div>'
-            + '<div class="tn-history-actions"><button class="tn-history-edit" data-edit="' + t.id + '">✎</button><button class="tn-history-del" data-del="' + t.id + '">×</button></div></div>';
-        } else {
-          const label = t.playType === 'together' ? '一起打' : (t.playType === 'me' ? s.myName + '自己打' : s.friendName + '自己打');
-          const iconClass = t.playType === 'together' ? 'together' : (t.playType === 'me' ? 'me' : 'friend');
-          let iconInner;
-          if (t.playType === 'together') {
-            iconInner = (AVATAR_KE ? '<img class="tn-pair-avatar a" src="' + AVATAR_KE + '" alt="" />' : '') + (AVATAR_TANG ? '<img class="tn-pair-avatar b" src="' + AVATAR_TANG + '" alt="" />' : '');
-            if (!AVATAR_KE && !AVATAR_TANG) iconInner = '🎾';
-            iconInner += '<span class="tn-heart-badge">💗</span>';
-          }
-          else if (t.playType === 'me') { iconInner = AVATAR_TANG ? '<img src="' + AVATAR_TANG + '" alt="" />' : '🎾'; }
-          else { iconInner = AVATAR_KE ? '<img src="' + AVATAR_KE + '" alt="" />' : '🎾'; }
-          html += '<div class="tn-history-item' + editing + '"><div class="tn-history-icon ' + iconClass + '">' + iconInner + '</div>'
-            + '<div class="tn-history-body"><div class="tn-history-title">' + label + (t.note ? ' · ' + escapeHtml(t.note) : '') + '</div>'
-            + '<div class="tn-history-sub">' + fmtFullDate(t.date) + (t.rateType ? ' · ' + RATE_LABELS[t.rateType] + ' ' + t.hours + 'h' : '') + '</div></div>'
-            + '<div class="tn-history-amount">-' + fmtMoney(t.amount) + '</div>'
-            + '<div class="tn-history-actions"><button class="tn-history-edit" data-edit="' + t.id + '">✎</button><button class="tn-history-del" data-del="' + t.id + '">×</button></div></div>';
-        }
-      }
+      for (const t of sorted) html += historyItemHtml(t, s, state.editingId === t.id);
       html += '</div>';
     }
     return html;
+  }
+
+  function closeCalModal() { state.calSelected = null; }
+
+  function renderWelcome(s) {
+    const myInit = s.myName.slice(0,1), frInit = s.friendName.slice(0,1);
+    return '<div class="tn-welcome">'
+      + '<div class="tn-welcome-card">'
+      + '<div class="tn-welcome-title">Net Worth</div>'
+      + '<div class="tn-welcome-sub">·our tennis diary·</div>'
+      + '<div class="tn-welcome-pair">'
+      + avFallbackImg(AVATAR_TANG, myInit, '#17A398', 'tn-welcome-av')
+      + avFallbackImg(AVATAR_KE, frInit, '#BD5D31', 'tn-welcome-av')
+      + '</div>'
+      + '<div class="tn-welcome-meta">' + escapeHtml(s.myName) + ' × ' + escapeHtml(s.friendName) + '</div>'
+      + '<button class="tn-welcome-btn" id="tn-welcome-start">开始记录 🎾</button>'
+      + '</div></div>';
+  }
+
+  function renderCalendar(s) {
+    const y = state.calYear, m = state.calMonth;
+    const monthName = y + '年' + (m+1) + '月';
+    const first = new Date(y, m, 1);
+    const startDow = first.getDay();
+    const daysInMonth = new Date(y, m+1, 0).getDate();
+    const todayKey = fmtDateKey(new Date());
+    const monthKey = y + '-' + String(m+1).padStart(2,'0');
+
+    let html = '';
+    html += '<div class="tn-cal-head">'
+      + '<div class="tn-cal-nav"><button class="tn-cal-nav-btn" id="tn-cal-prev">‹</button>'
+      + '<h2 class="tn-cal-title">' + monthName + '</h2>'
+      + '<button class="tn-cal-nav-btn" id="tn-cal-next">›</button></div>'
+      + '<div class="tn-cal-slicer">'
+        + '<button class="tn-slice' + (state.calFilter === 'all' ? ' active' : '') + '" data-calfilter="all">全部</button>'
+        + '<button class="tn-slice' + (state.calFilter === 'me' ? ' active' : '') + '" data-calfilter="me">' + avFallbackImg(AVATAR_TANG, s.myName.slice(0,1), '#17A398', 'tn-slice-av') + escapeHtml(s.myName) + '</button>'
+        + '<button class="tn-slice' + (state.calFilter === 'friend' ? ' active' : '') + '" data-calfilter="friend">' + avFallbackImg(AVATAR_KE, s.friendName.slice(0,1), '#BD5D31', 'tn-slice-av') + escapeHtml(s.friendName) + '</button>'
+        + '<button class="tn-slice' + (state.calFilter === 'together' ? ' active' : '') + '" data-calfilter="together"><span class="tn-slice-emoji">💗</span>一起</button>'
+      + '</div>'
+      + '<div class="tn-cal-legend-row">'
+        + '<span class="tn-cal-leg"><span class="tn-cal-leg-dot me"></span>闲时</span>'
+        + '<span class="tn-cal-leg"><span class="tn-cal-leg-dot friend"></span>忙时</span>'
+        + '<span class="tn-cal-leg"><span class="tn-cal-leg-kind">' + racketIcon(14) + '</span>打球</span>'
+        + '<span class="tn-cal-leg"><span class="tn-cal-leg-kind">' + coinIcon(14) + '</span>充值</span>'
+      + '</div></div>';
+
+    const monthPlays = state.transactions.filter(t => t.kind === 'play' && t.date.slice(0,7) === monthKey).length;
+    html += '<div class="tn-streak-bar">'
+      + '<span class="tn-chip"><span class="tn-chip-ico">🎾</span>本月已打 <b>' + monthPlays + '</b> 次</span></div>';
+
+    const dows = ['日','一','二','三','四','五','六'];
+    html += '<div class="tn-cal-grid">';
+    dows.forEach((d, i) => { html += '<div class="tn-cal-dow' + ((i===0||i===6) ? ' tn-cal-weekend' : '') + '">' + d + '</div>'; });
+    for (let i=0; i<startDow; i++) html += '<div class="tn-cal-cell tn-cal-pad"><span class="tn-cal-daynum">·</span></div>';
+    for (let d=1; d<=daysInMonth; d++) {
+      const key = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+      const agg = getDayAgg(key);
+      const hasPlay = agg.plays.length > 0;
+      const hasRecharge = agg.recharges.length > 0;
+      const has = hasPlay || hasRecharge;
+      const isToday = key === todayKey;
+      const dim = (state.calFilter && state.calFilter !== 'all') && !cellMatchesFilter(agg);
+      const match = (state.calFilter && state.calFilter !== 'all') && cellMatchesFilter(agg);
+      let cls = 'tn-cal-cell' + (has ? ' tn-cal-has' : '') + (isToday ? ' tn-cal-today' : '') + (hasPlay ? ' tn-cal-' + agg.dayStatus : '') + (dim ? ' tn-cal-dim' : '') + (match ? ' tn-cal-match' : '');
+      let style = '';
+      if (hasPlay) {
+        const intensity = Math.min(0.36, 0.09 + agg.hours * 0.09);
+        const base = { idle: '23,163,152', busy: '189,93,49', unknown: '107,98,88' }[agg.dayStatus];
+        style = ' style="background:rgba(' + base + ',' + intensity.toFixed(2) + ');"';
+      } else if (hasRecharge) {
+        style = ' style="background:rgba(207,224,91,0.18);"';
+      }
+      let marks = '';
+      if (has) {
+        let playerMarks = '';
+        if (agg.players.includes('me')) playerMarks += avFallbackImg(AVATAR_TANG, s.myName.slice(0,1), '#17A398', 'tn-cal-avatar');
+        if (agg.players.includes('friend')) playerMarks += avFallbackImg(AVATAR_KE, s.friendName.slice(0,1), '#BD5D31', 'tn-cal-avatar');
+        let kindMarks = '';
+        if (hasPlay) kindMarks += '<span class="tn-cal-kind-icon">' + racketIcon(15, true) + '</span>';
+        if (hasRecharge) kindMarks += '<span class="tn-cal-kind-icon tn-cal-kind-recharge">' + coinIcon(15) + '</span>';
+        marks = (agg.together ? '<span class="tn-cal-heart">💗</span>' : '')
+          + kindMarks
+          + '<div class="tn-cal-marks">' + playerMarks + '</div>';
+      }
+      html += '<div class="' + cls + '"' + style + ' data-caldate="' + key + '">'
+        + '<span class="tn-cal-daynum">' + d + '</span>' + marks + '</div>';
+    }
+    html += '</div>';
+    html += '<div style="font-size:11px;color:var(--ink-soft);margin-top:12px;line-height:1.5;">点击任意日期，查看当天打球明细（可编辑 / 删除 / 补记）。</div>';
+
+    if (state.calSelected) html += renderDayModal(s, state.calSelected);
+    return html;
+  }
+
+  function renderDayModal(s, dateKey) {
+    const agg = getDayAgg(dateKey);
+    const all = [...agg.plays, ...agg.recharges].sort((a, b) => b.id.localeCompare(a.id));
+    let body;
+    if (all.length === 0) body = '<div class="tn-modal-empty">这一天还没有记录～</div>';
+    else { body = '<div class="tn-history">'; for (const t of all) body += historyItemHtml(t, s, state.editingId === t.id); body += '</div>'; }
+    const dt = new Date(dateKey + 'T00:00:00');
+    const title = dt.getFullYear() + '年' + (dt.getMonth()+1) + '月' + dt.getDate() + '日';
+    return '<div class="tn-modal-overlay" id="tn-cal-modal">'
+      + '<div class="tn-modal">'
+        + '<div class="tn-modal-head"><div class="tn-modal-title">' + title + '</div>'
+        + '<button class="tn-modal-close" id="tn-modal-close">×</button></div>'
+        + '<div class="tn-modal-body">' + body + '</div>'
+        + '<div class="tn-modal-foot"><button class="tn-modal-add" id="tn-modal-add">＋ 记一笔（这天）</button></div>'
+      + '</div></div>';
   }
 
   function buildLineChart(s) {
@@ -665,8 +1087,8 @@
     }
 
     html += '<div class="tn-stats">';
-    html += statCard(fmtHours(playStats.myHours), '小时', escapeHtml(s.myName) + '时长', 'tn-me', AVATAR_TANG);
-    html += statCard(fmtHours(playStats.friendHours), '小时', escapeHtml(s.friendName) + '时长', 'tn-friend', AVATAR_KE);
+    html += statCard(fmtHours(playStats.myHours), '小时', escapeHtml(s.myName) + '时长', 'tn-me', AVATAR_TANG, s.myName.slice(0,1));
+    html += statCard(fmtHours(playStats.friendHours), '小时', escapeHtml(s.friendName) + '时长', 'tn-friend', AVATAR_KE, s.friendName.slice(0,1));
     html += statCard(fmtHours(playStats.togetherHours), '小时', '一起打 ♥', 'tn-together');
     html += '</div>';
 
@@ -703,9 +1125,13 @@
     return html;
   }
 
-  function statCard(num, unit, label, extraClass, avatar) {
-    return '<div class="tn-stat-card ' + (extraClass || '') + '">'
-      + (avatar ? '<img class="tn-stat-avatar" src="' + avatar + '" alt="" />' : '')
+  function statCard(num, unit, label, extraClass, avatar, avatarInitial) {
+    let avatarHtml = '';
+    if (avatar) {
+      const bg = extraClass === 'tn-me' ? '#17A398' : (extraClass === 'tn-friend' ? '#BD5D31' : '#6B6258');
+      avatarHtml = avFallbackImg(avatar, avatarInitial || label.slice(0,1), bg, 'tn-stat-avatar');
+    }
+    return '<div class="tn-stat-card ' + (extraClass || '') + '">' + avatarHtml
       + '<div class="tn-stat-num">' + num + (unit ? '<span class="unit">' + unit + '</span>' : '') + '</div>'
       + '<div class="tn-stat-label">' + label + '</div></div>';
   }
@@ -744,10 +1170,32 @@
     const submitBtn = document.getElementById('tn-submit');
     if (submitBtn) submitBtn.onclick = () => { syncFormInputs(); submitForm(); };
     const cancelEdit = document.getElementById('tn-cancel-edit');
-    if (cancelEdit) cancelEdit.onclick = () => { resetForm(); render(); };
+    if (cancelEdit) cancelEdit.onclick = () => { resetForm(); state.activeTab = state.returnTab || 'record'; render(); };
 
-    document.querySelectorAll('[data-edit]').forEach(btn => { btn.onclick = () => startEdit(btn.getAttribute('data-edit')); });
-    document.querySelectorAll('[data-del]').forEach(btn => { btn.onclick = () => deleteTransaction(btn.getAttribute('data-del')); });
+    // 日历：月份切换
+    const calPrev = document.getElementById('tn-cal-prev');
+    if (calPrev) calPrev.onclick = () => { state.calMonth--; if (state.calMonth < 0) { state.calMonth = 11; state.calYear--; } render(); };
+    const calNext = document.getElementById('tn-cal-next');
+    if (calNext) calNext.onclick = () => { state.calMonth++; if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; } render(); };
+    document.querySelectorAll('[data-calfilter]').forEach(btn => { btn.onclick = () => { state.calFilter = btn.getAttribute('data-calfilter'); render(); }; });
+
+    // 日历：点击日期 -> 弹窗
+    document.querySelectorAll('[data-caldate]').forEach(cell => {
+      cell.onclick = () => { state.calSelected = cell.getAttribute('data-caldate'); render(); };
+    });
+
+    // 弹窗：关闭 / 点击遮罩 / 补记
+    const modalOverlay = document.getElementById('tn-cal-modal');
+    if (modalOverlay) {
+      modalOverlay.onclick = (e) => { if (e.target === modalOverlay) { closeCalModal(); render(); } };
+      const modalClose = document.getElementById('tn-modal-close');
+      if (modalClose) modalClose.onclick = () => { closeCalModal(); render(); };
+      const modalAdd = document.getElementById('tn-modal-add');
+      if (modalAdd) modalAdd.onclick = () => { const d = state.calSelected; closeCalModal(); state.returnTab = 'calendar'; state.activeTab = 'record'; state.editingId = null; state.formMode = 'play'; if (d) state.formDate = d; render(); };
+    }
+
+    document.querySelectorAll('[data-edit]').forEach(btn => { btn.onclick = () => { closeCalModal(); startEdit(btn.getAttribute('data-edit')); }; });
+    document.querySelectorAll('[data-del]').forEach(btn => { btn.onclick = () => { closeCalModal(); deleteTransaction(btn.getAttribute('data-del')); }; });
 
     const dateInput = document.getElementById('tn-form-date');
     if (dateInput) dateInput.oninput = (e) => { state.formDate = e.target.value; };
