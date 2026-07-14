@@ -382,7 +382,7 @@
     settings: { myName: '小唐', friendName: '小柯', initialBalance: 20000 },
     transactions: [],
     activeTab: 'record',
-    formMode: 'play', playType: 'together', rateType: 'off', hours: 1,
+    formMode: 'play', playType: 'together', rateType: 'outdoor_off', hours: 1,
     payer: 'split',
     formDate: new Date().toISOString().slice(0,10),
     formAmount: '', formNote: '',
@@ -401,8 +401,15 @@
   };
 
   function uid() { return 't' + Date.now() + Math.random().toString(36).slice(2,7); }
-  const RATES = { off: 425, peak: 467.5 };
-  const RATE_LABELS = { off: '闲时', peak: '忙时' };
+  const RATES = { outdoor_off: 425, outdoor_peak: 467.5, indoor_off: 510, indoor_peak: 595 };
+  const RATE_LABELS = { outdoor_off: '室外闲时', outdoor_peak: '室外忙时', indoor_off: '室内闲时', indoor_peak: '室内忙时' };
+  // 旧数据兼容：历史记录均为室外打球，rate_type 旧值 'off'/'peak' 映射为 outdoor 对应值
+  function normalizeRateType(rt) {
+    if (!rt) return undefined;
+    if (rt === 'off') return 'outdoor_off';
+    if (rt === 'peak') return 'outdoor_peak';
+    return rt;
+  }
   const AVATAR_TANG = './tang.png';
   const AVATAR_KE = './ke.png';
 
@@ -474,7 +481,7 @@
 
   function rowToTx(r) {
     return { id: r.id, kind: r.kind, date: r.date, amount: Number(r.amount), note: r.note || '',
-      playType: r.play_type || undefined, rateType: r.rate_type || undefined,
+      playType: r.play_type || undefined, rateType: normalizeRateType(r.rate_type),
       hours: (r.hours === null || r.hours === undefined) ? undefined : Number(r.hours),
       payer: r.payer || undefined };
   }
@@ -619,9 +626,11 @@
     }
     let dayStatus = 'unknown';
     if (plays.length > 0) {
-      // 仅保留两种状态：含任何 peak 即判为「忙时」（优先），否则「闲时」
-      if (rateTypes.has('peak')) dayStatus = 'busy';
-      else if (rateTypes.has('off')) dayStatus = 'idle';
+      const hasPeak = [...rateTypes].some(r => r && r.endsWith('peak'));
+      const hasOff = [...rateTypes].some(r => r && r.endsWith('off'));
+      // 含任何 peak 即判为「忙时」（优先），否则「闲时」
+      if (hasPeak) dayStatus = 'busy';
+      else if (hasOff) dayStatus = 'idle';
     }
     return { plays, recharges, players: [...players], together, hours, cost, rateTypes: [...rateTypes], dayStatus };
   }
@@ -643,7 +652,7 @@
   }
 
   function resetForm() {
-    state.editingId = null; state.formMode = 'play'; state.playType = 'together'; state.rateType = 'off';
+    state.editingId = null; state.formMode = 'play'; state.playType = 'together'; state.rateType = 'outdoor_off';
     state.hours = 1; state.payer = 'split'; state.formDate = new Date().toISOString().slice(0,10);
     state.formAmount = ''; state.formNote = '';
   }
@@ -674,7 +683,7 @@
   function startEdit(id) {
     const t = state.transactions.find(x => x.id === id); if (!t) return;
     state.returnTab = state.activeTab; state.activeTab = 'record'; state.editingId = id; state.formMode = t.kind; state.formDate = t.date; state.formNote = t.note || '';
-    if (t.kind === 'play') { state.playType = t.playType || 'together'; state.rateType = t.rateType || 'off'; state.hours = t.hours || 1; }
+    if (t.kind === 'play') { state.playType = t.playType || 'together'; state.rateType = t.rateType || 'outdoor_off'; state.hours = t.hours || 1; }
     else { state.payer = t.payer || 'split'; state.formAmount = String(t.amount); }
     render();
     root.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -817,8 +826,10 @@
         + '<button class="tn-play-type-btn ' + (state.playType === 'me' ? 'selected' : '') + '" data-playtype="me">' + escapeHtml(s.myName) + '自己</button>'
         + '<button class="tn-play-type-btn ' + (state.playType === 'friend' ? 'selected' : '') + '" data-playtype="friend">' + escapeHtml(s.friendName) + '自己</button></div>'
         + '<div class="tn-play-type-row">'
-        + '<button class="tn-play-type-btn ' + (state.rateType === 'off' ? 'selected' : '') + '" data-ratetype="off">闲时 ¥' + RATES.off + '/小时</button>'
-        + '<button class="tn-play-type-btn ' + (state.rateType === 'peak' ? 'selected' : '') + '" data-ratetype="peak">忙时 ¥' + RATES.peak + '/小时</button></div>';
+        + '<button class="tn-play-type-btn ' + (state.rateType === 'outdoor_off' ? 'selected' : '') + '" data-ratetype="outdoor_off">室外闲 ¥' + RATES.outdoor_off + '</button>'
+        + '<button class="tn-play-type-btn ' + (state.rateType === 'outdoor_peak' ? 'selected' : '') + '" data-ratetype="outdoor_peak">室外忙 ¥' + RATES.outdoor_peak + '</button>'
+        + '<button class="tn-play-type-btn ' + (state.rateType === 'indoor_off' ? 'selected' : '') + '" data-ratetype="indoor_off">室内闲 ¥' + RATES.indoor_off + '</button>'
+        + '<button class="tn-play-type-btn ' + (state.rateType === 'indoor_peak' ? 'selected' : '') + '" data-ratetype="indoor_peak">室内忙 ¥' + RATES.indoor_peak + '</button></div>';
       const computedAmount = Math.round(RATES[state.rateType] * (parseFloat(state.hours) || 0) * 100) / 100;
       html += '<div class="tn-field-row">'
         + '<div class="tn-field"><label>日期</label><input type="date" id="tn-form-date" value="' + state.formDate + '" /></div>'
